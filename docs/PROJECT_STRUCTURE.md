@@ -6,6 +6,7 @@
 
 ```text
 iambox_app/
+├── AGENTS.md
 ├── README.md
 ├── package.json
 ├── pnpm-workspace.yaml
@@ -55,6 +56,7 @@ iambox_app/
 | 위치 | 역할 / 둘 파일 | 두지 않을 파일·내용 |
 | --- | --- | --- |
 | 루트 | 워크스페이스 설정, 공통 실행 명령, lockfile, 개요 | 화면 구현, 서버 도메인 코드, 비밀값 |
+| `AGENTS.md` | 에이전트 작업 지침, 한글 커밋 메시지 규칙, 문서 참조 | 상세 API 계약이나 데이터 모델의 중복 정의 |
 | `docs/` | 제품·구조·DB·API 기준 문서 | 런타임 코드, 실제 인증정보 |
 | `mobile/` | 앱 진입점, 모바일 소스와 설정 | DB 접속 코드, 서버 비밀키 |
 | `mobile/index.ts` | Expo 루트 등록 | 업무 처리 |
