@@ -1,0 +1,12 @@
+{
+  "name": "iambox-app",
+  "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "scripts": {
+    "dev:mobile": "pnpm --filter @iambox/mobile start",
+    "typecheck:mobile": "pnpm --filter @iambox/mobile typecheck",
+    "dev:api": "pnpm --filter @iambox/api dev",
+    "build:api": "pnpm --filter @iambox/api build",
+    "typecheck:api": "pnpm --filter @iambox/api typecheck"
+  }
+}
