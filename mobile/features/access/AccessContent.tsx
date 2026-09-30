@@ -12,6 +12,8 @@ import colors from '../../theme/colors.json';
 
 // 제공 SVG는 같은 PNG를 base64로 두 번 담은 3.5MB 파일이라 JS 번들에 넣지 않도록 PNG로 추출해 사용한다.
 const storageIllustration = require('../../assets/imbox_storage_A-024.png');
+// 폭 360px 미만(320px에서 확인)에서는 보관함 그림이 카드 오른쪽에서 잘리지 않도록 크기와 위치를 줄인다.
+const compactIllustration = { right: -32, width: 174, height: 130 };
 
 const visitLinks = [
   { key: 'location', label: '지점 위치 · 길찾기', Icon: Location },
@@ -34,7 +36,7 @@ export function AccessContent({ onOpenQr }: Props) {
           <View className={largeText ? 'pb-4' : 'min-h-[126px] justify-center pb-4'}>
             <Decorative
               className={largeText ? 'h-[140px] w-full' : 'absolute -right-9 -top-2 h-[142px] w-[213px]'}
-              style={!largeText && compact ? { right: -32, width: 174, height: 130 } : undefined}
+              style={!largeText && compact ? compactIllustration : undefined}
             >
               <Image source={storageIllustration} resizeMode="contain" className="h-full w-full" />
             </Decorative>
@@ -52,6 +54,7 @@ export function AccessContent({ onOpenQr }: Props) {
                 {usage.startsAt} – {usage.endsAt}
               </Text>
             </View>
+            {/* 39%는 시안의 구분선 위치에 맞춘 폭, 28%는 좁은 화면에서 이용 기간 날짜가 한 줄에 들어가도록 줄인 폭이다. */}
             <View className={largeText ? '' : `border-l border-primary-200 pl-4 ${compact ? 'w-[28%]' : 'w-[39%]'}`}>
               <Text className="text-[12px] leading-[18px] text-muted">남은 기간</Text>
               <Text className="mt-1 text-[16px] font-bold leading-6 text-heading">{usage.remainingDays}일</Text>

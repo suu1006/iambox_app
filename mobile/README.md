@@ -130,6 +130,12 @@ pnpm typecheck:mobile
 
 ## 검증 기록
 
+2026-09-30 홈·출입QR 화면과 디자인 시스템 정리 후:
+
+- `pnpm typecheck:mobile`, `pnpm --filter @iambox/mobile test`(13개), iOS·Android `expo export`, `git diff --check`: 통과.
+- React Native Web 임시 미리보기(390px)에서 홈·출입QR·마이 화면, 좌우 여백 24px, 안내 모달·QR 안내창 열기·닫기를 확인했습니다. 웹 렌더링은 네이티브 화면을 대체하지 않습니다.
+- **미검증:** iOS 시뮬레이터·실기기의 홈·출입QR 화면, Android 하드웨어 뒤로가기, 스크린리더(VoiceOver·TalkBack) 탐색, OS 큰 글자 설정(출입QR의 큰 글자 배치), 320px급 좁은 기기의 줄바꿈·그림 잘림.
+
 2026-09-30 출입 QR 밝기 추가 후:
 
 - `pnpm --filter @iambox/mobile test`: 13개 통과. 밝기 0 포함 복원, Android 시스템 밝기 사용 상태 복원, 앱 상태 이벤트·정리, 빠른 닫기·재열기, API 실패 후 복원을 확인했습니다.
