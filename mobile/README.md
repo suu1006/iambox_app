@@ -112,6 +112,11 @@ pnpm typecheck:mobile
 ## 파일 역할
 
 - `index.ts`, `App.tsx`: 앱 등록, 하단 탭 상태와 화면 배치.
+- `theme/colors.json`: primary 기준 색상 토큰. 사용 기준은 [Design System](../docs/DESIGN_SYSTEM.md)을 따릅니다.
+- `components/ui/`: 여러 화면이 쓰는 Button, Badge, Decorative, InfoDialog·DialogCard·useInfoDialog.
+- `components/layout/`: ScreenContainer, AppHeader, BottomTabBar, PlaceholderContent 화면 뼈대.
+- `features/home/HomeContent.tsx`, `EventBanner.tsx`: 홈 소개·서비스 카드·바로가기·이벤트 배너·후기.
+- `features/access/AccessContent.tsx`: 출입QR 내 공간 카드·방문 안내·문의.
 - `features/access/QrAccessModal.tsx`: QR 안내창과 Android 오버레이·뒤로가기 처리.
 - `features/access/useQrBrightness.ts`, `brightnessSession.ts`: 네이티브 밝기 연결, 앱 상태에 따른 적용·복원과 비동기 순서 관리.
 - `tests/brightnessSession.test.cjs`: 밝기 복원·앱 전환·빠른 닫기·실패 처리 테스트.
