@@ -44,7 +44,6 @@ iambox_app/
 │   ├── svg.d.ts                    # SVG import 타입
 │   ├── tsconfig.json
 │   ├── README.md
-│   ├── LICENSE
 │   └── assets/
 └── api/
     ├── package.json

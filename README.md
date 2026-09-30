@@ -17,7 +17,6 @@ iambox_app/
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── assets/
-│   ├── LICENSE
 │   └── README.md
 └── api/
     ├── src/
