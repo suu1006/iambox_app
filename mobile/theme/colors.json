@@ -1,0 +1,11 @@
+{
+  "primary": "#7B2DDA",
+  "inactive": "#818598",
+  "surface": "#FFFFFF",
+  "brand": "#2563EB",
+  "heading": "#101828",
+  "muted": "#667085",
+  "canvas": "#F8FAFC",
+  "iconSurface": "#EFF6FF",
+  "divider": "#E8E9EF"
+}

@@ -25,8 +25,10 @@ React Native / Expo → HTTP REST API → NestJS → Prisma → PostgreSQL
 
 - `mobile/index.ts`가 `registerRootComponent(App)`으로 앱을 등록한다.
 - `App.tsx`의 `useState`로 홈 · 지점찾기 · 출입QR · 이삿짐 · 마이 탭 선택을 관리한다. `Pressable`에 선택 상태와 탭 접근성 역할을 제공한다.
-- `react-native-safe-area-context`로 안전 영역을 반영하고 `react-native-svg`와 SVG transformer로 `assets/nav-*.svg` 탭 아이콘을 표시한다. 선택 탭은 보라색이고 중앙 출입QR은 원형 버튼으로 강조한다. 같은 SVG를 임시 콘텐츠 아이콘에도 재사용한다. QR SVG는 모양과 전달받은 색상만 표현하며 원형 배경과 그림자는 View에서 관리한다. 공통 선택 색상은 App.tsx 내부 상수로 관리한다. 콘텐츠는 스크롤 가능하고 하단 탭은 고정된다. 각 메뉴는 임시 안내 화면이다.
-- 화면 라우터, 별도 화면 디렉토리, hooks, 전역 상태 관리, 영속 상태 저장은 없다.
+- `react-native-safe-area-context`로 안전 영역을 반영하고 `react-native-svg`와 SVG transformer로 `assets/nav-*.svg` 탭 아이콘을 표시한다. 선택 탭은 보라색이고 중앙 출입QR은 원형 버튼으로 강조한다. 같은 SVG를 임시 콘텐츠 아이콘에도 재사용한다. QR SVG는 모양과 전달받은 색상만 표현하며 원형 배경과 그림자는 View에서 관리한다. 공통 색상은 `mobile/theme/colors.json`에서 관리하며 Tailwind와 SVG가 함께 사용한다. 콘텐츠는 스크롤 가능하고 하단 탭은 고정된다. 각 메뉴는 임시 안내 화면이다.
+- `App.tsx`는 탭 상태와 배치를 담당하고 `components/`의 AppHeader, PlaceholderContent, BottomTabBar로 UI를 분리한다. 탭 정의와 타입은 `navigation/tabs.ts`에 둔다. 화면 라우터, 별도 화면 디렉토리, hooks, 전역 상태 관리, 영속 상태 저장은 없다.
+- NativeWind 4와 Tailwind CSS 3의 `className`으로 스타일을 작성한다. `global.css`는 Tailwind 진입점이며 `tailwind.config.js`에서 컴포넌트 경로와 공통 색상을 지정한다. Metro는 SVG transformer와 NativeWind를 함께 적용하며 `inlineRem: 16`으로 기존 간격을 유지한다. 네이티브 hairline과 QR 그림자만 BottomTabBar의 작은 StyleSheet에 남긴다.
+- Babel은 Expo/NativeWind preset을 사용한다. pnpm에서 JSX 런타임을 찾도록 `react-native-css-interop`를 직접 선언하고 Reanimated/Worklets는 Expo 호환 버전을 사용한다. Metro peer는 React Native와 같은 0.86.3으로 고정한다.
 - HTTP 클라이언트, API base URL, 인증 토큰 처리, 요청 캐시는 없다. 호출 방식은 첫 연동 단계에서 결정한다.
 - 지도·QR·결제 라이브러리와 권한 설정은 미구현이다. 제공자와 연결 방식은 TBD다.
 - 개발 서버를 여는 Expo QR은 제품의 출입 QR 기능이 아니다.

@@ -23,7 +23,14 @@ iambox_app/
 │   ├── App.tsx
 │   ├── app.json
 │   ├── package.json
-│   ├── metro.config.js             # SVG 변환 설정
+│   ├── metro.config.js             # SVG + NativeWind 설정
+│   ├── babel.config.js             # Expo + NativeWind preset
+│   ├── tailwind.config.js          # 클래스 탐색 경로와 색상
+│   ├── global.css                  # Tailwind 진입점
+│   ├── nativewind-env.d.ts         # className과 CSS import 타입
+│   ├── components/                # AppHeader, BottomTabBar, PlaceholderContent
+│   ├── navigation/tabs.ts         # 탭 정의와 TabKey
+│   ├── theme/colors.json          # Tailwind/SVG 공통 색상
 │   ├── svg.d.ts                    # SVG import 타입
 │   ├── tsconfig.json
 │   ├── README.md
@@ -62,7 +69,10 @@ iambox_app/
 | `docs/` | 제품·구조·DB·API 기준 문서 | 런타임 코드, 실제 인증정보 |
 | `mobile/` | 앱 진입점, 모바일 소스와 설정 | DB 접속 코드, 서버 비밀키 |
 | `mobile/index.ts` | Expo 루트 등록 | 업무 처리 |
-| `mobile/App.tsx` | 앱 구성 진입점, 하단 탭과 메뉴별 임시 화면 | 기능이 커진 뒤 모든 업무 로직을 한 파일에 누적 |
+| `mobile/App.tsx` | 앱 구성 진입점, 탭 상태와 컴포넌트 배치 | 기능이 커진 뒤 모든 업무 로직을 한 파일에 누적 |
+| `mobile/components/` | 헤더, 하단 탭, 임시 콘텐츠 UI와 전용 스타일 | API 요청, 전역 상태 |
+| `mobile/navigation/` | 탭 정의와 타입 (라우터 아님) | 화면 업무 로직 |
+| `mobile/theme/` | 공통 색상 | 화면 전용 배치 |
 | `mobile/assets/` | 아이콘 등 번들 정적 이미지 | API 응답, TS 업무 로직 |
 | `api/` | 서버 패키지·환경·빌드·Prisma CLI 설정 | 모바일 UI |
 | `api/src/` | 부팅, 모듈, Controller, Service | DB migration SQL, 빌드 출력 |
@@ -79,7 +89,7 @@ iambox_app/
 2. 모바일 소스는 `mobile/`, 서버 소스는 `api/src/` 아래에 둔다.
 3. 서버 기능이 실제로 추가될 때 `api/src/<domain>/`에 Module·Controller·Service와 필요한 DTO를 함께 둔다. 현재 도메인 폴더는 없다.
 4. 모바일에 화면 분리가 필요하면 라우팅 방식을 먼저 결정한다. 현재 Expo Router가 없으므로 `app/` 폴더가 자동 라우팅된다고 가정하지 않는다.
-5. 기능별 UI·hooks·API 연동이 생기면 `mobile/features/<feature>/`를 사용할 수 있다. 여러 기능에서 실제로 재사용하는 UI는 `mobile/components/`, 공통 HTTP 처리가 필요해지면 `mobile/services/`로 분리할 수 있다. 모두 **예정 배치 지침**이며 지금 생성하지 않는다.
+5. 기능별 UI·hooks·API 연동이 생기면 `mobile/features/<feature>/`를 사용할 수 있다. 여러 기능에서 실제로 재사용하는 UI는 `mobile/components/`, 공통 HTTP 처리가 필요해지면 `mobile/services/`로 분리할 수 있다. `components/`는 현재 UI 분리에 사용하며 `features/`와 `services/`는 **예정 배치 지침**이다.
 6. 기능 전용 타입은 해당 기능 가까이에 둔다. 공용 `types/`는 실제 공유 필요가 생길 때만 만든다.
 7. 데이터 모델은 `api/prisma/schema.prisma`를 수정한다. 생성물을 직접 수정하지 않는다.
 
