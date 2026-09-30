@@ -4,6 +4,7 @@ import StorageBoxes from '../../assets/01_storage_boxes.svg';
 import MovingTruck from '../../assets/02_moving_truck.svg';
 import BranchMapPin from '../../assets/03_branch_map_pin.svg';
 import StartupStore from '../../assets/04_startup_store.svg';
+import { Badge, Decorative } from '../../components/ui';
 
 const events = [
   { title: '첫 보관의 시작을 응원해요', Icon: StorageBoxes },
@@ -65,14 +66,12 @@ export function EventBanner() {
               className="min-h-[135px] flex-row items-center pb-7 pl-4 pr-2 pt-4"
             >
               <View className="flex-1">
-                <View className="self-start rounded-full bg-primary-200 px-3 py-1">
-                  <Text className="text-[11px] font-semibold text-primary">이벤트 예시</Text>
-                </View>
+                <Badge label="이벤트 예시" tone="soft" />
                 <Text accessibilityRole="header" className="mt-2 text-[17px] font-bold leading-6 text-heading">{title}</Text>
               </View>
-              <View className="h-[85px] w-[100px]" accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+              <Decorative className="h-[85px] w-[100px]">
                 <Icon width="100%" height="100%" />
-              </View>
+              </Decorative>
             </View>
           ))}
         </Animated.View>

@@ -42,5 +42,3 @@ export const mockAccessDetails = {
     lines: ['문의하실 때 지점명과 보관함 번호를 알려 주세요.', '고객센터 연결은 준비 중입니다. 현재 화면에서는 문의가 접수되지 않습니다.'],
   },
 };
-
-export type AccessDetailKey = keyof typeof mockAccessDetails;
