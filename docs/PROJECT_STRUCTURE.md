@@ -23,6 +23,8 @@ iambox_app/
 │   ├── App.tsx
 │   ├── app.json
 │   ├── package.json
+│   ├── metro.config.js             # SVG 변환 설정
+│   ├── svg.d.ts                    # SVG import 타입
 │   ├── tsconfig.json
 │   ├── README.md
 │   ├── LICENSE
@@ -60,7 +62,7 @@ iambox_app/
 | `docs/` | 제품·구조·DB·API 기준 문서 | 런타임 코드, 실제 인증정보 |
 | `mobile/` | 앱 진입점, 모바일 소스와 설정 | DB 접속 코드, 서버 비밀키 |
 | `mobile/index.ts` | Expo 루트 등록 | 업무 처리 |
-| `mobile/App.tsx` | 현재 실행 확인 화면; 이후 앱 구성 진입점 | 기능이 커진 뒤 모든 업무 로직을 한 파일에 누적 |
+| `mobile/App.tsx` | 앱 구성 진입점, 하단 탭과 메뉴별 임시 화면 | 기능이 커진 뒤 모든 업무 로직을 한 파일에 누적 |
 | `mobile/assets/` | 아이콘 등 번들 정적 이미지 | API 응답, TS 업무 로직 |
 | `api/` | 서버 패키지·환경·빌드·Prisma CLI 설정 | 모바일 UI |
 | `api/src/` | 부팅, 모듈, Controller, Service | DB migration SQL, 빌드 출력 |

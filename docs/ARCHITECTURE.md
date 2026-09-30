@@ -7,7 +7,7 @@
 현재 서로 구분된 흐름:
 
 ```text
-Expo → mobile/index.ts → App.tsx → 실행 확인 화면
+Expo → mobile/index.ts → App.tsx → 하단 탭 / 선택한 메뉴의 임시 화면
 HTTP GET / → AppController → AppService → Hello World!
 서버 초기화 → PrismaModule → PrismaService → PostgreSQL 연결
 연결 확인 CLI → PrismaService → SELECT current_database() → 결과 출력
@@ -24,7 +24,8 @@ React Native / Expo → HTTP REST API → NestJS → Prisma → PostgreSQL
 ## Frontend Architecture
 
 - `mobile/index.ts`가 `registerRootComponent(App)`으로 앱을 등록한다.
-- `App.tsx`의 함수 컴포넌트, React Native `View`·`Text`·`StyleSheet`, Expo `StatusBar`로 화면 하나를 구성한다.
+- `App.tsx`의 `useState`로 홈 · 지점찾기 · 출입QR · 이삿짐 · 마이 탭 선택을 관리한다. `Pressable`에 선택 상태와 탭 접근성 역할을 제공한다.
+- `react-native-safe-area-context`로 안전 영역을 반영하고 `react-native-svg`와 SVG transformer로 `assets/nav-*.svg` 탭 아이콘을 표시한다. 선택 탭은 보라색이고 중앙 출입QR은 원형 버튼으로 강조한다. 같은 SVG를 임시 콘텐츠 아이콘에도 재사용한다. QR SVG는 모양과 전달받은 색상만 표현하며 원형 배경과 그림자는 View에서 관리한다. 공통 선택 색상은 App.tsx 내부 상수로 관리한다. 콘텐츠는 스크롤 가능하고 하단 탭은 고정된다. 각 메뉴는 임시 안내 화면이다.
 - 화면 라우터, 별도 화면 디렉토리, hooks, 전역 상태 관리, 영속 상태 저장은 없다.
 - HTTP 클라이언트, API base URL, 인증 토큰 처리, 요청 캐시는 없다. 호출 방식은 첫 연동 단계에서 결정한다.
 - 지도·QR·결제 라이브러리와 권한 설정은 미구현이다. 제공자와 연결 방식은 TBD다.
