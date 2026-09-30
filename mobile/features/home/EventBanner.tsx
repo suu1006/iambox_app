@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Text, View } from 'react-native';
-import StorageBoxes from '../assets/01_storage_boxes.svg';
-import MovingTruck from '../assets/02_moving_truck.svg';
-import BranchMapPin from '../assets/03_branch_map_pin.svg';
-import StartupStore from '../assets/04_startup_store.svg';
+import StorageBoxes from '../../assets/01_storage_boxes.svg';
+import MovingTruck from '../../assets/02_moving_truck.svg';
+import BranchMapPin from '../../assets/03_branch_map_pin.svg';
+import StartupStore from '../../assets/04_startup_store.svg';
 
 const events = [
   { title: '첫 보관의 시작을 응원해요', Icon: StorageBoxes },

@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { AppHeader } from '../../components/AppHeader';
+import { AppHeader } from '../../components/layout/AppHeader';
 import { previewLocations } from '../../mocks/locations';
 import { LocationMap } from './LocationMap';
 

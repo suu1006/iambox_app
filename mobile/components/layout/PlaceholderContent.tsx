@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 import type { SvgProps } from 'react-native-svg';
-import colors from '../theme/colors.json';
+import colors from '../../theme/colors.json';
 
 type Props = { label: string; Icon: ComponentType<SvgProps> };
 

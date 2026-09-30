@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Image, Modal, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
-import ArrowRight from '../assets/arrow-right.svg';
-import ChevronRight from '../assets/chevron-right.svg';
-import Guide from '../assets/guide.svg';
-import Headset from '../assets/headset.svg';
-import Location from '../assets/location.svg';
-import QrScan from '../assets/qr-scan.svg';
-import { mockAccessDetails, mockStorageUsage, type AccessDetailKey } from '../mocks/access';
-import colors from '../theme/colors.json';
+import ArrowRight from '../../assets/arrow-right.svg';
+import ChevronRight from '../../assets/chevron-right.svg';
+import Guide from '../../assets/guide.svg';
+import Headset from '../../assets/headset.svg';
+import Location from '../../assets/location.svg';
+import QrScan from '../../assets/qr-scan.svg';
+import { mockAccessDetails, mockStorageUsage, type AccessDetailKey } from '../../mocks/access';
+import colors from '../../theme/colors.json';
 
 // 제공 SVG는 같은 PNG를 base64로 두 번 담은 3.5MB 파일이라 JS 번들에 넣지 않도록 PNG로 추출해 사용한다.
-const storageIllustration = require('../assets/imbox_storage_A-024.png');
+const storageIllustration = require('../../assets/imbox_storage_A-024.png');
 
 const visitLinks = [
   { key: 'location', label: '지점 위치 · 길찾기', Icon: Location },

@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Modal, Pressable, ScrollView, Text, useWindowDimensions, View } from 'react-native';
 import { EventBanner } from './EventBanner';
-import StorageBoxes from '../assets/01_storage_boxes.svg';
-import StartupStore from '../assets/04_startup_store.svg';
-import HomeStorage from '../assets/home-storage.svg';
-import HomeDelivery from '../assets/home-delivery.svg';
-import HomeCare from '../assets/home-care.svg';
-import HomeStartup from '../assets/home-startup.svg';
-import HomeLocation from '../assets/home-location.svg';
-import HomeOnsite from '../assets/home-onsite.svg';
-import HomeNotice from '../assets/home-notice.svg';
-import ChevronRight from '../assets/chevron-right.svg';
+import StorageBoxes from '../../assets/01_storage_boxes.svg';
+import StartupStore from '../../assets/04_startup_store.svg';
+import HomeStorage from '../../assets/home-storage.svg';
+import HomeDelivery from '../../assets/home-delivery.svg';
+import HomeCare from '../../assets/home-care.svg';
+import HomeStartup from '../../assets/home-startup.svg';
+import HomeLocation from '../../assets/home-location.svg';
+import HomeOnsite from '../../assets/home-onsite.svg';
+import HomeNotice from '../../assets/home-notice.svg';
+import ChevronRight from '../../assets/chevron-right.svg';
 
 const services = [
   { title: '택배요청', description: '간편하게 접수하세요', Icon: HomeDelivery },
