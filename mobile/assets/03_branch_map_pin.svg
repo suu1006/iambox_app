@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 230">
+<defs>
+ <linearGradient id="pin" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#A357EF"/><stop offset="1" stop-color="#5A20BD"/></linearGradient>
+ <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF"/><stop offset="1" stop-color="#E7E3F4"/></linearGradient>
+</defs>
+<ellipse cx="148" cy="202" rx="105" ry="13" fill="#69429A" opacity=".13"/>
+<path d="M38 111l66-21 59 20 67-23 31 96-73 21-57-19-69 18z" fill="url(#paper)" stroke="#DCD7EB" stroke-width="3" stroke-linejoin="round"/>
+<path d="M104 90l27 95M163 110l25 94" fill="none" stroke="#D5CCE8" stroke-width="3"/>
+<path d="M55 148l50-15 28 12 46-16 55 13" fill="none" stroke="#B6E7BD" stroke-width="14" opacity=".8"/>
+<path d="M55 177l48-14 32 10 45-17 64 10" fill="none" stroke="#C8B1F0" stroke-width="12" opacity=".9"/>
+<path d="M193 28c-29 0-52 22-52 51 0 38 52 89 52 89s52-51 52-89c0-29-23-51-52-51z" fill="url(#pin)"/>
+<circle cx="193" cy="79" r="19" fill="#F4EFFF"/>
+<circle cx="193" cy="79" r="10" fill="#FFF"/>
+</svg>
