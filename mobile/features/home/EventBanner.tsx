@@ -52,7 +52,7 @@ export function EventBanner() {
   return (
     <View
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
-      className="mt-4 min-h-[135px] overflow-hidden rounded-[20px] bg-[#F0E9FA]"
+      className="mt-4 min-h-[135px] overflow-hidden rounded-[20px] bg-primary-100"
     >
       {width > 0 && (
         <Animated.View style={{ flexDirection: 'row', width: width * slides.length, transform: [{ translateX }] }}>
@@ -65,7 +65,7 @@ export function EventBanner() {
               className="min-h-[135px] flex-row items-center pb-7 pl-4 pr-2 pt-4"
             >
               <View className="flex-1">
-                <View className="self-start rounded-full bg-[#E5D5F7] px-3 py-1">
+                <View className="self-start rounded-full bg-primary-200 px-3 py-1">
                   <Text className="text-[11px] font-semibold text-primary">이벤트 예시</Text>
                 </View>
                 <Text accessibilityRole="header" className="mt-2 text-[17px] font-bold leading-6 text-heading">{title}</Text>
@@ -77,8 +77,8 @@ export function EventBanner() {
           ))}
         </Animated.View>
       )}
-      <View className="absolute bottom-2 right-4 items-center justify-center rounded-full bg-[#E5E5EB] px-2.5 py-1">
-        <Text accessibilityLabel={`전체 ${events.length}개 이벤트 중 ${page + 1}번째`} className="text-[11px] leading-[14px] text-[#6B6B78]">
+      <View className="absolute bottom-2 right-4 items-center justify-center rounded-full bg-divider px-2.5 py-1">
+        <Text accessibilityLabel={`전체 ${events.length}개 이벤트 중 ${page + 1}번째`} className="text-[11px] leading-[14px] text-muted">
           {page + 1}/{events.length}
         </Text>
       </View>

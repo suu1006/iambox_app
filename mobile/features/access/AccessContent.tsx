@@ -46,7 +46,7 @@ export function AccessContent({ onOpenQr }: Props) {
             <Text className="mt-2 text-[15px] leading-[18px] tracking-tight text-muted">오늘도 가볍게, 아이엠박스</Text>
           </View>
 
-          <View className="overflow-hidden rounded-[20px] bg-[#F4F0FF] px-4 pt-4">
+          <View className="overflow-hidden rounded-[20px] bg-primary-50 px-4 pt-4">
             <View className={largeText ? 'pb-4' : 'min-h-[126px] justify-center pb-4'}>
               <View
                 pointerEvents="none"
@@ -58,22 +58,22 @@ export function AccessContent({ onOpenQr }: Props) {
                 <Image source={storageIllustration} resizeMode="contain" className="h-full w-full" />
               </View>
               <View className="self-start rounded-full bg-primary px-3 py-1">
-                <Text className="text-[12px] font-bold leading-[18px] text-white">{usage.status}</Text>
+                <Text className="text-[12px] font-bold leading-[18px] text-onPrimary">{usage.status}</Text>
               </View>
               <Text accessibilityRole="header" className={`mt-3 font-bold tracking-tight text-heading ${compact ? 'text-[20px] leading-7' : 'text-[24px] leading-8'}`}>
                 {usage.branchName} · {usage.unitNumber}
               </Text>
-              <Text className="mt-0.5 text-[16px] leading-6 text-[#5E6573]">{usage.size} 사이즈 · {usage.floor}</Text>
+              <Text className="mt-0.5 text-[16px] leading-6 text-muted">{usage.size} 사이즈 · {usage.floor}</Text>
             </View>
 
-            <View className={`border-t border-[#E4DEF2] py-3 ${largeText ? 'gap-3' : 'flex-row'}`}>
+            <View className={`border-t border-primary-200 py-3 ${largeText ? 'gap-3' : 'flex-row'}`}>
               <View className={largeText ? '' : 'flex-1 pr-2'}>
                 <Text className="text-[12px] leading-[18px] text-muted">이용 기간</Text>
                 <Text className={`mt-1 font-bold leading-6 tracking-tight text-heading ${compact ? 'text-[12px]' : 'text-[14px]'}`}>
                   {usage.startsAt} – {usage.endsAt}
                 </Text>
               </View>
-              <View className={largeText ? '' : `border-l border-[#E4DEF2] pl-4 ${compact ? 'w-[28%]' : 'w-[39%]'}`}>
+              <View className={largeText ? '' : `border-l border-primary-200 pl-4 ${compact ? 'w-[28%]' : 'w-[39%]'}`}>
                 <Text className="text-[12px] leading-[18px] text-muted">남은 기간</Text>
                 <Text className="mt-1 text-[16px] font-bold leading-6 text-heading">{usage.remainingDays}일</Text>
               </View>
@@ -85,8 +85,8 @@ export function AccessContent({ onOpenQr }: Props) {
               onPress={onOpenQr}
               className="mt-1 min-h-[48px] flex-row items-center justify-center gap-2 rounded-lg bg-primary px-3 py-3 active:opacity-70"
             >
-              <QrScan width={26} height={26} color={colors.surface} accessible={false} />
-              <Text className="text-[16px] font-bold leading-6 text-white">출입 QR 열기</Text>
+              <QrScan width={26} height={26} color={colors.onPrimary} accessible={false} />
+              <Text className="text-[16px] font-bold leading-6 text-onPrimary">출입 QR 열기</Text>
             </Pressable>
             <Pressable
               accessibilityRole="button"
@@ -94,7 +94,7 @@ export function AccessContent({ onOpenQr }: Props) {
               className="min-h-[52px] flex-row items-center justify-center gap-1 py-3 active:opacity-60"
             >
               <Text className="text-[14px] font-bold leading-6 text-primary">이용 내역 보기</Text>
-              <ArrowRight width={21} height={21} color={colors.primary} accessible={false} />
+              <ArrowRight width={21} height={21} color={colors.primary.DEFAULT} accessible={false} />
             </Pressable>
           </View>
 
@@ -108,9 +108,9 @@ export function AccessContent({ onOpenQr }: Props) {
                   onPress={() => openDetail(key)}
                   className={`min-h-[58px] flex-row items-center gap-3 px-1 py-3 active:opacity-60 ${index === 0 ? 'border-b border-divider' : ''}`}
                 >
-                  <Icon width={28} height={28} color="#5E6573" accessible={false} />
+                  <Icon width={28} height={28} color={colors.muted} accessible={false} />
                   <Text className="flex-1 text-[16px] font-medium leading-6 text-heading">{label}</Text>
-                  <ChevronRight width={22} height={22} color="#5E6573" accessible={false} />
+                  <ChevronRight width={22} height={22} color={colors.muted} accessible={false} />
                 </Pressable>
               ))}
             </View>
@@ -120,15 +120,15 @@ export function AccessContent({ onOpenQr }: Props) {
             accessibilityRole="button"
             accessibilityLabel="도움이 필요하신가요? 문의하기"
             onPress={() => openDetail('support')}
-            className={`mt-2 min-h-[50px] gap-2 rounded-lg bg-[#F5F6F9] px-3 py-3 active:opacity-60 ${largeText ? '' : 'flex-row items-center'}`}
+            className={`mt-2 min-h-[50px] gap-2 rounded-lg bg-canvas px-3 py-3 active:opacity-60 ${largeText ? '' : 'flex-row items-center'}`}
           >
             <View className="flex-1 flex-row items-center gap-2">
-              <Headset width={24} height={24} color="#5E6573" accessible={false} />
+              <Headset width={24} height={24} color={colors.muted} accessible={false} />
               <Text className="flex-shrink text-[13px] leading-5 text-muted">도움이 필요하신가요?</Text>
             </View>
             <View className="flex-row items-center gap-1">
               <Text className="text-[13px] font-bold leading-5 text-primary">문의하기</Text>
-              <ArrowRight width={20} height={20} color={colors.primary} accessible={false} />
+              <ArrowRight width={20} height={20} color={colors.primary.DEFAULT} accessible={false} />
             </View>
           </Pressable>
         </View>
@@ -140,12 +140,12 @@ export function AccessContent({ onOpenQr }: Props) {
             <ScrollView showsVerticalScrollIndicator={false}>
               <Text accessibilityRole="header" className="text-[22px] font-bold text-heading">{detail?.title}</Text>
               <Text className="mt-2 text-[14px] leading-5 text-muted">{detail?.description}</Text>
-              <View className="my-5 gap-3 rounded-2xl bg-[#F4F0FF] p-4">
+              <View className="my-5 gap-3 rounded-2xl bg-primary-50 p-4">
                 {detail?.lines.map((line) => <Text key={line} className="text-[15px] leading-6 text-heading">{line}</Text>)}
               </View>
             </ScrollView>
             <Pressable accessibilityRole="button" onPress={closeDetail} className="min-h-[48px] items-center justify-center rounded-xl bg-primary px-4 py-3 active:opacity-70">
-              <Text className="text-[16px] font-bold text-white">닫기</Text>
+              <Text className="text-[16px] font-bold text-onPrimary">닫기</Text>
             </Pressable>
           </View>
         </View>

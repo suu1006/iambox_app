@@ -27,12 +27,12 @@ export function QrAccessModal({ visible, onClose }: Props) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text ref={titleRef} accessible accessibilityRole="header" className="text-[22px] font-bold text-heading">{detail.title}</Text>
         <Text className="mt-2 text-[14px] leading-5 text-muted">{detail.description}</Text>
-        <View className="my-5 gap-3 rounded-2xl bg-[#F4F0FF] p-4">
+        <View className="my-5 gap-3 rounded-2xl bg-primary-50 p-4">
           {detail.lines.map((line) => <Text key={line} className="text-[15px] leading-6 text-heading">{line}</Text>)}
         </View>
       </ScrollView>
       <Pressable accessibilityRole="button" onPress={onClose} className="min-h-[48px] items-center justify-center rounded-xl bg-primary px-4 py-3 active:opacity-70">
-        <Text className="text-[16px] font-bold text-white">닫기</Text>
+        <Text className="text-[16px] font-bold text-onPrimary">닫기</Text>
       </Pressable>
     </View>
   );
