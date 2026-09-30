@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 220">
+<defs>
+ <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8C45EA"/><stop offset="1" stop-color="#5420B5"/></linearGradient>
+ <linearGradient id="cab" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#FFF"/><stop offset="1" stop-color="#D9DCE7"/></linearGradient>
+ <radialGradient id="wheel"><stop stop-color="#9AA0AD"/><stop offset=".45" stop-color="#5B606B"/><stop offset=".5" stop-color="#22252D"/><stop offset="1" stop-color="#11131A"/></radialGradient>
+</defs>
+<ellipse cx="176" cy="190" rx="145" ry="13" fill="#6B4B99" opacity=".15"/>
+<path d="M121 63h171c9 0 16 7 16 16v87H121z" fill="url(#purple)"/>
+<path d="M38 102l20-35h72v99H31v-48c0-7 2-12 7-16z" fill="url(#cab)" stroke="#C9CCD7" stroke-width="2"/>
+<path d="M61 76h48v35H44z" fill="#B7C6D4"/>
+<path d="M63 80h42v26H50z" fill="#7C91A5"/>
+<rect x="31" y="132" width="22" height="17" rx="3" fill="#F5D061"/>
+<path d="M119 118H31" stroke="#BFC4CE" stroke-width="3"/>
+<text x="178" y="122" font-family="Arial,sans-serif" font-size="29" font-weight="700" fill="white">iambox</text>
+<circle cx="79" cy="169" r="29" fill="url(#wheel)"/><circle cx="79" cy="169" r="11" fill="#D7D9E0"/>
+<circle cx="259" cy="169" r="29" fill="url(#wheel)"/><circle cx="259" cy="169" r="11" fill="#D7D9E0"/>
+<path d="M119 166h111" stroke="#BFC4CE" stroke-width="8"/>
+</svg>

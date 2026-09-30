@@ -8,5 +8,8 @@
     "dev:api": "pnpm --filter @iambox/api dev",
     "build:api": "pnpm --filter @iambox/api build",
     "typecheck:api": "pnpm --filter @iambox/api typecheck"
+  },
+  "devDependencies": {
+    "eslint": "^10.11.0"
   }
 }

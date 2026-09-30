@@ -17,7 +17,6 @@ iambox_app/
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── assets/
-│   ├── LICENSE
 │   └── README.md
 └── api/
     ├── src/
@@ -71,9 +70,10 @@ pnpm install
 pnpm dev:mobile --port 8082
 ```
 
-휴대폰과 컴퓨터를 같은 Wi-Fi에 연결하고, Expo Go에서 터미널의 QR 코드를
-열면 `iambox 앱 실행 성공` 문구가 표시됩니다.
-자세한 실행 방법은 [mobile/README.md](mobile/README.md)를 참고하세요.
+지점찾기는 네이버 지도 SDK를 사용하므로 Client ID 설정과 개발용 앱 빌드·설치가 먼저 필요합니다.
+설치한 개발용 앱으로 위 서버에 연결하면 홈과 하단 탭을 확인할 수 있습니다.
+Expo Go에서는 지도 대신 준비 안내를 표시합니다. 신규 설정과 플랫폼별 빌드 방법은
+[mobile/README.md](mobile/README.md)를 참고하세요.
 
 타입 검사:
 

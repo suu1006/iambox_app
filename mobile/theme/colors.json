@@ -1,11 +1,17 @@
 {
-  "primary": "#7B2DDA",
-  "inactive": "#818598",
-  "surface": "#FFFFFF",
-  "brand": "#2563EB",
+  "primary": {
+    "DEFAULT": "#7B2DDA",
+    "50": "#F6F2FD",
+    "100": "#F0E9FA",
+    "200": "#E5D5F7"
+  },
+  "onPrimary": "#FFFFFF",
+  "onPrimaryMuted": "#EEE0FF",
   "heading": "#101828",
   "muted": "#667085",
+  "inactive": "#818598",
+  "surface": "#FFFFFF",
   "canvas": "#F8FAFC",
-  "iconSurface": "#EFF6FF",
-  "divider": "#E8E9EF"
+  "divider": "#E8E9EF",
+  "rating": "#FFB02E"
 }

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { tabs, type TabKey } from '../navigation/tabs';
-import colors from '../theme/colors.json';
+import { tabs, type TabKey } from '../../navigation/tabs';
+import colors from '../../theme/colors.json';
 
 type Props = { activeTab: TabKey; onTabChange: (tab: TabKey) => void };
 
@@ -25,7 +25,7 @@ export function BottomTabBar({ activeTab, onTabChange }: Props) {
                 <Icon
                   width={isQr ? 48 : 26}
                   height={isQr ? 48 : 26}
-                  color={isQr ? colors.surface : selected ? colors.primary : colors.inactive}
+                  color={isQr ? colors.onPrimary : selected ? colors.primary.DEFAULT : colors.inactive}
                   accessible={false}
                 />
               </View>
@@ -44,7 +44,7 @@ export function BottomTabBar({ activeTab, onTabChange }: Props) {
 const styles = StyleSheet.create({
   divider: { height: StyleSheet.hairlineWidth },
   qrShadow: {
-    shadowColor: colors.primary,
+    shadowColor: colors.primary.DEFAULT,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,

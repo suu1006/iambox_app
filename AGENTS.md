@@ -37,5 +37,6 @@ docs: MVP 범위와 현재 프로젝트 구조 문서화
 - [Project Structure](docs/PROJECT_STRUCTURE.md): 디렉토리 책임과 파일 배치 기준
 - [Database](docs/DATABASE.md): Prisma 모델, 관계, migration
 - [API](docs/API.md): 요청·응답과 인증 계약
+- [Design System](docs/DESIGN_SYSTEM.md): 모바일 색상 토큰, 공통 UI 컴포넌트와 배치 기준
 
 코드와 문서가 다르면 실제 구현을 기준으로 차이를 명시한다. 예정 또는 TBD 항목을 구현된 것으로 간주하지 않는다. 요청된 단계만 구현하고, 관련 설계나 구조가 바뀌면 해당 문서를 갱신한다.
