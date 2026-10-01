@@ -37,7 +37,7 @@ import colors from '../../theme/colors.json';
 <ArrowRight color={colors.primary.DEFAULT} /> // primary는 단계색을 가진 객체라 DEFAULT로 기본값을 읽는다.
 ```
 
-모달 배경의 반투명 검정(`bg-black/40`)은 `DialogBackdrop` 한 곳에서만 사용한다. `assets/home-*.svg`, `01_storage_boxes.svg` 등 일러스트 SVG는 시안 색을 고정으로 담고 있어 토큰 대상이 아니다. `color` prop을 받는 아이콘 SVG(`currentColor`)만 토큰 색을 전달한다.
+모달 배경의 반투명 검정(`bg-black/40`)은 `DialogBackdrop` 한 곳에서만 사용한다. `assets/home-storage.svg`, `home-delivery.svg`, `home-care.svg`, `01_storage_boxes.svg` 등 일러스트 SVG는 시안 색을 고정으로 담고 있어 토큰 대상이 아니다. 홈 바로가기 4개(`home-startup`, `home-location`, `home-onsite`, `home-notice`)는 `stroke="currentColor"`에 `primary` 토큰을 전달한다. `color` prop을 받는 아이콘 SVG(`currentColor`)만 토큰 색을 전달한다.
 
 ## 공통 컴포넌트
 

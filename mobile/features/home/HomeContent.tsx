@@ -104,7 +104,7 @@ export function HomeContent({ onLocationsPress }: Props) {
               className="min-w-0 flex-1 items-center pb-1 active:opacity-60"
             >
               <Decorative className="h-16 w-16 items-center justify-center rounded-full bg-primary-50">
-                <Icon width={32} height={32} />
+                <Icon width={32} height={32} color={colors.primary.DEFAULT} />
               </Decorative>
               <Text className="mt-2 text-center text-[12px] font-semibold leading-[18px] tracking-tight text-muted">{title}</Text>
             </Pressable>
