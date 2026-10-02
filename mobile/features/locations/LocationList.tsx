@@ -1,3 +1,4 @@
+import { spacing } from '@iambox/design-tokens';
 import { Image, Pressable, Text, View, useWindowDimensions } from 'react-native';
 import type { ReactNode } from 'react';
 import { Badge, BottomSheetFlatList } from '../../components/ui';
@@ -34,11 +35,11 @@ export function LocationList({
       windowSize={5}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
-      contentContainerStyle={{ paddingBottom: 24 }}
+      contentContainerStyle={{ paddingBottom: spacing.screen }}
       ListHeaderComponent={header ? <View>{header}</View> : undefined}
       ListEmptyComponent={(
-        <View className="px-6 py-10">
-          <Text className="text-center text-[15px] leading-6 text-muted">{emptyMessage}</Text>
+        <View className="px-screen py-10">
+          <Text className="text-center text-size-15 leading-6 text-muted">{emptyMessage}</Text>
         </View>
       )}
       ItemSeparatorComponent={() => <View className="mx-6 h-px bg-divider" />}
@@ -50,15 +51,15 @@ export function LocationList({
             accessibilityLabel={`${location.name} 상세 보기, ${location.address}, 이용 가능한 사이즈 ${location.availableSizes?.join(', ') || '정보 없음'}, 최저가 ${formatLocationPrice(location.priceFromKrw)}`}
             accessibilityState={{ selected }}
             onPress={() => onSelectLocation(location)}
-            className={`min-h-[48px] px-6 py-5 active:opacity-60 ${selected ? 'bg-primary-50' : 'bg-surface'}`}
+            className={`min-h-[48px] px-screen py-5 active:opacity-60 ${selected ? 'bg-primary-50' : 'bg-surface'}`}
           >
             <View className={stacked ? 'gap-4' : 'flex-row items-start gap-4'}>
               <View
                 accessible={false}
-                className="items-center justify-center overflow-hidden rounded-2xl bg-canvas"
+                className="items-center justify-center overflow-hidden rounded-thumbnail bg-canvas"
                 style={location.photoSource
-                  ? { width: imageSize, height: imageSize + 8 }
-                  : { width: imageSize, minHeight: imageSize + 8, paddingVertical: 12 }}
+                  ? { width: imageSize, height: imageSize + spacing.content }
+                  : { width: imageSize, minHeight: imageSize + spacing.content, paddingVertical: spacing['3'] }}
               >
                 {location.photoSource ? (
                   <Image
@@ -70,26 +71,26 @@ export function LocationList({
                 ) : (
                   <>
                     <LocationIcon width={28} height={28} color={colors.inactive} accessible={false} />
-                    <Text className="mt-2 text-center text-[12px] leading-5 text-muted">이미지 준비 중</Text>
+                    <Text className="mt-2 text-center text-size-12 leading-5 text-muted">이미지 준비 중</Text>
                   </>
                 )}
               </View>
               <View className={stacked ? 'min-w-0' : 'min-w-0 flex-1'}>
-                <Text className="text-[18px] font-bold leading-6 text-primary">{location.name}</Text>
+                <Text className="text-size-18 font-bold leading-6 text-primary">{location.name}</Text>
                 <View className="mt-1 flex-row items-center gap-1">
                   <LocationIcon width={16} height={16} color={colors.muted} accessible={false} />
-                  <Text className="min-w-0 flex-1 text-[13px] leading-5 text-heading">{location.address}</Text>
+                  <Text className="min-w-0 flex-1 text-body-small text-heading">{location.address}</Text>
                 </View>
                 {!!location.availableSizes?.length && (
                   <View className="mt-2 flex-row flex-wrap items-center gap-1.5">
-                    <Text className="text-[13px] leading-5 text-muted">이용가능 :</Text>
+                    <Text className="text-body-small text-muted">이용가능 :</Text>
                     {location.availableSizes.map((size) => (
                       <Badge key={size} label={size} tone="neutral" size="compact" />
                     ))}
                   </View>
                 )}
-                <Text className="mt-2 text-[12px] font-bold leading-5 text-muted">최저가</Text>
-                <Text className="text-[22px] font-extrabold leading-8 text-heading">
+                <Text className="mt-2 text-size-12 font-bold leading-5 text-muted">최저가</Text>
+                <Text className="text-size-22 font-extrabold leading-8 text-heading">
                   {formatLocationPrice(location.priceFromKrw)}
                 </Text>
               </View>

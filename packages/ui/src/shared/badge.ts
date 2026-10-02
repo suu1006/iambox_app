@@ -1,11 +1,12 @@
 import colors from '@iambox/design-tokens/colors.json';
+import { radii, spacing, typography } from '@iambox/design-tokens';
 
 export type BadgeTone = 'solid' | 'soft' | 'neutral';
 export type BadgeSize = 'default' | 'compact';
 export type BadgeSharedProps = { label: string; tone?: BadgeTone; size?: BadgeSize };
 
 export const badgeBaseRule = {
-  containerClassName: 'self-start', labelClassName: 'font-bold', fontWeight: 700,
+  containerClassName: 'self-start',
 } as const;
 export const badgeTones = {
   solid: {
@@ -23,13 +24,14 @@ export const badgeTones = {
 } as const;
 export const badgeSizes = {
   default: {
-    containerClassName: 'rounded-full px-3 py-1', labelClassName: 'text-[12px] leading-[18px]',
-    borderRadius: 9999, paddingHorizontal: 12, paddingVertical: 4,
-    fontSize: 12, lineHeight: 18, width: undefined, textAlign: 'left',
+    containerClassName: 'rounded-pill px-3 py-1', labelClassName: 'text-badge',
+    borderRadius: radii.pill, paddingHorizontal: spacing['3'], paddingVertical: spacing['1'],
+    ...typography.badge, width: undefined, textAlign: 'left',
   },
   compact: {
-    containerClassName: 'w-5 items-center rounded-[4px] py-0.5', labelClassName: 'text-center text-[11px] leading-4',
-    borderRadius: 4, paddingHorizontal: 0, paddingVertical: 2,
-    fontSize: 11, lineHeight: 16, width: 20, textAlign: 'center',
+    containerClassName: 'w-5 items-center rounded-badge py-0.5', labelClassName: 'text-center text-badge-compact',
+    borderRadius: radii.badge, paddingHorizontal: spacing['0'], paddingVertical: spacing['0.5'],
+    ...typography['badge-compact'],
+    width: spacing['5'], textAlign: 'center',
   },
 } as const;

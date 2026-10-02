@@ -9,7 +9,7 @@ export function ScreenContainer({ header, children }: Props) {
     <ScrollView className="flex-1 bg-surface" contentContainerClassName="pb-8" showsVerticalScrollIndicator={false}>
       <View className="mx-auto w-full max-w-[600px]">
         {header}
-        <View className="px-6">{children}</View>
+        <View className="px-screen">{children}</View>
       </View>
     </ScrollView>
   );

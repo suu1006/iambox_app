@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'react';
-import { badgeBaseRule, badgeSizes, badgeTones, type BadgeSharedProps } from '../shared/badge.ts';
+import { badgeSizes, badgeTones, type BadgeSharedProps } from '../shared/badge.ts';
 
 export type BadgeProps = Omit<HTMLAttributes<HTMLSpanElement>, 'children'> & BadgeSharedProps;
 export function Badge({ label, tone = 'solid', size = 'default', style, ...props }: BadgeProps) {
@@ -11,7 +11,7 @@ export function Badge({ label, tone = 'solid', size = 'default', style, ...props
       paddingRight: sizeRule.paddingHorizontal, paddingTop: sizeRule.paddingVertical,
       paddingBottom: sizeRule.paddingVertical, width: sizeRule.width,
       textAlign: sizeRule.textAlign, justifyContent: size === 'compact' ? 'center' : undefined,
-      fontWeight: badgeBaseRule.fontWeight, fontSize: sizeRule.fontSize,
+      fontWeight: sizeRule.fontWeight, letterSpacing: sizeRule.letterSpacing, fontSize: sizeRule.fontSize,
       lineHeight: `${sizeRule.lineHeight}px`, color: toneRule.color,
       backgroundColor: toneRule.backgroundColor, ...style }}>{label}</span>
   );

@@ -1,3 +1,4 @@
+import { fontSizes, spacing } from '@iambox/design-tokens';
 import { Pressable, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import SearchIcon from '../../assets/locations/search.svg';
 import FilterIcon from '../../assets/locations/filter.svg';
@@ -18,8 +19,8 @@ export function LocationSearchHeader({
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 320 || fontScale > 1.5;
   return (
-    <View className={`gap-2 px-6 pb-6 pt-3 ${stacked ? '' : 'flex-row items-center'}`}>
-      <View className={`min-h-[48px] flex-row items-center gap-2 rounded-xl bg-canvas pl-3 ${stacked ? '' : 'min-w-0 flex-1'}`}>
+    <View className={`gap-content px-screen pb-6 pt-3 ${stacked ? '' : 'flex-row items-center'}`}>
+      <View className={`min-h-[48px] flex-row items-center gap-content rounded-button bg-canvas pl-3 ${stacked ? '' : 'min-w-0 flex-1'}`}>
         <SearchIcon width={20} height={20} color={colors.muted} accessible={false} />
         <TextInput
           accessibilityLabel="지역·지점명 검색"
@@ -48,10 +49,10 @@ export function LocationSearchHeader({
         accessibilityLabel={filterCount ? `사이즈 필터, ${filterCount}개 적용됨` : '사이즈 필터'}
         accessibilityHint="이용 가능한 사이즈를 선택합니다."
         onPress={onOpenFilter}
-        className={`min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-xl border px-3 py-3 active:opacity-60 ${filterCount ? 'border-primary bg-primary-50' : 'border-divider bg-surface'}`}
+        className={`min-h-[48px] flex-row items-center justify-center gap-1.5 rounded-button border px-3 py-3 active:opacity-60 ${filterCount ? 'border-primary bg-primary-50' : 'border-divider bg-surface'}`}
       >
         <FilterIcon width={20} height={20} color={filterCount ? colors.primary.DEFAULT : colors.heading} accessible={false} />
-        <Text className={`text-[14px] font-bold ${filterCount ? 'text-primary' : 'text-heading'}`}>
+        <Text className={`text-size-14 font-bold ${filterCount ? 'text-primary' : 'text-heading'}`}>
           {filterCount ? `필터 ${filterCount}` : '필터'}
         </Text>
       </Pressable>
@@ -60,5 +61,5 @@ export function LocationSearchHeader({
 }
 
 const styles = StyleSheet.create({
-  input: { minHeight: 48, minWidth: 0, flex: 1, paddingVertical: 12, fontSize: 16, color: colors.heading },
+  input: { minHeight: 48, minWidth: 0, flex: 1, paddingVertical: spacing['3'], fontSize: fontSizes['16'], color: colors.heading },
 });

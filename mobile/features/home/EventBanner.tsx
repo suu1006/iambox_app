@@ -60,7 +60,7 @@ export function EventBanner() {
     <View
       onLayout={(event) => setWidth(event.nativeEvent.layout.width)}
       style={{ aspectRatio: BANNER_ASPECT_RATIO }}
-      className="mt-4 w-full overflow-hidden rounded-[20px] bg-primary-100"
+      className="mt-4 w-full overflow-hidden rounded-card bg-primary-100"
     >
       {width > 0 && (
         // 슬라이드가 측정한 폭으로 컨테이너 크기를 다시 정하지 않도록 레이아웃 흐름에서 뺀다.
@@ -84,8 +84,8 @@ export function EventBanner() {
           ))}
         </Animated.View>
       )}
-      <View className="absolute bottom-2 right-4 items-center justify-center rounded-full bg-divider px-2.5 py-1">
-        <Text accessibilityLabel={`전체 ${events.length}개 이벤트 중 ${page + 1}번째`} className="text-[11px] leading-[14px] text-muted">
+      <View className="absolute bottom-2 right-4 items-center justify-center rounded-pill bg-divider px-2.5 py-1">
+        <Text accessibilityLabel={`전체 ${events.length}개 이벤트 중 ${page + 1}번째`} className="text-size-11 leading-line-14 text-muted">
           {page + 1}/{events.length}
         </Text>
       </View>

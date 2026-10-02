@@ -92,14 +92,14 @@ export function LocationsContent({ onBack }: Props) {
               onSelectLocation={openDetail}
               emptyMessage="검색 결과가 없어요. 다른 검색어나 사이즈를 선택해 주세요."
               header={selectedSizes.length ? (
-                <View className="flex-row flex-wrap gap-2 px-6 pt-1">
+                <View className="flex-row flex-wrap gap-content px-screen pt-1">
                   {selectedSizes.map((size) => (
                     <Pressable
                       key={size} accessibilityRole="button" accessibilityLabel={`${size} 사이즈 필터 삭제`}
                       onPress={() => setSelectedSizes((sizes) => sizes.filter((value) => value !== size))}
-                      className="min-h-[44px] flex-row items-center gap-1 rounded-full bg-primary-50 px-3 py-2 active:opacity-60"
+                      className="min-h-[44px] flex-row items-center gap-1 rounded-pill bg-primary-50 px-3 py-2 active:opacity-60"
                     >
-                      <Text className="text-[13px] font-bold text-primary">{size} 사이즈</Text>
+                      <Text className="text-size-13 font-bold text-primary">{size} 사이즈</Text>
                       <CloseIcon width={14} height={14} color={colors.primary.DEFAULT} accessible={false} />
                     </Pressable>
                   ))}

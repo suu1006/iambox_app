@@ -4,7 +4,16 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./colors.json": "./src/colors.json"
+    ".": {
+      "types": "./src/index.d.cts",
+      "default": "./src/index.cjs"
+    },
+    "./tailwind": "./src/tailwind.cjs",
+    "./colors.json": "./src/colors.json",
+    "./typography.json": "./src/typography.json",
+    "./spacing.json": "./src/spacing.json",
+    "./radii.json": "./src/radii.json",
+    "./shadows.json": "./src/shadows.json"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

@@ -31,7 +31,7 @@ export function AccessContent({ onOpenQr }: Props) {
   return (
     <>
       <ScreenContainer header={<AppHeader title="이용중인 지점" subtitle="오늘도 가볍게, 아이엠박스" showBrand={false} />}>
-        <View className="overflow-hidden rounded-[20px] bg-primary-50 px-4 pt-4">
+        <View className="overflow-hidden rounded-card bg-primary-50 px-4 pt-4">
           <View className={largeText ? 'pb-4' : 'min-h-[126px] justify-center pb-4'}>
             <Decorative
               className={largeText ? 'h-[140px] w-full' : 'absolute -right-9 -top-2 h-[142px] w-[213px]'}
@@ -40,23 +40,23 @@ export function AccessContent({ onOpenQr }: Props) {
               <StorageIllustration width="100%" height="100%" preserveAspectRatio="xMidYMid meet" accessible={false} />
             </Decorative>
             <Badge label={usage.status} />
-            <Text accessibilityRole="header" className={`mt-3 font-bold tracking-tight text-heading ${compact ? 'text-[20px] leading-7' : 'text-[24px] leading-8'}`}>
+            <Text accessibilityRole="header" className={`mt-3 font-bold tracking-tight text-heading ${compact ? 'text-size-20 leading-7' : 'text-size-24 leading-8'}`}>
               {usage.branchName} · {usage.unitNumber}
             </Text>
-            <Text className="mt-0.5 text-[16px] leading-6 text-muted">{usage.size} 사이즈 · {usage.floor}</Text>
+            <Text className="mt-0.5 text-body text-muted">{usage.size} 사이즈 · {usage.floor}</Text>
           </View>
 
           <View className={`border-t border-primary-200 py-3 ${largeText ? 'gap-3' : 'flex-row'}`}>
             <View className={largeText ? '' : 'flex-1 pr-2'}>
-              <Text className="text-[12px] leading-[18px] text-muted">이용 기간</Text>
-              <Text className={`mt-1 font-bold leading-6 tracking-tight text-heading ${compact ? 'text-[12px]' : 'text-[14px]'}`}>
+              <Text className="text-caption text-muted">이용 기간</Text>
+              <Text className={`mt-1 font-bold leading-6 tracking-tight text-heading ${compact ? 'text-size-12' : 'text-size-14'}`}>
                 {usage.startsAt} – {usage.endsAt}
               </Text>
             </View>
             {/* 39%는 시안의 구분선 위치에 맞춘 폭, 28%는 좁은 화면에서 이용 기간 날짜가 한 줄에 들어가도록 줄인 폭이다. */}
             <View className={largeText ? '' : `border-l border-primary-200 pl-4 ${compact ? 'w-[28%]' : 'w-[39%]'}`}>
-              <Text className="text-[12px] leading-[18px] text-muted">남은 기간</Text>
-              <Text className="mt-1 text-[16px] font-bold leading-6 text-heading">{usage.remainingDays}일</Text>
+              <Text className="text-caption text-muted">남은 기간</Text>
+              <Text className="mt-1 text-size-16 font-bold leading-6 text-heading">{usage.remainingDays}일</Text>
             </View>
           </View>
 
@@ -70,8 +70,8 @@ export function AccessContent({ onOpenQr }: Props) {
           <Button label="이용 내역 보기" variant="link" TrailingIcon={ArrowRight} onPress={() => open(mockAccessDetails.history)} />
         </View>
 
-        <View className="mt-6">
-          <Text accessibilityRole="header" className="px-1 text-[20px] font-bold leading-7 tracking-tight text-heading">방문 시 확인하세요</Text>
+        <View className="mt-section">
+          <Text accessibilityRole="header" className="px-1 text-section-title tracking-tight text-heading">방문 시 확인하세요</Text>
           <View>
             {visitLinks.map(({ key, label, Icon }, index) => (
               <Pressable
@@ -81,7 +81,7 @@ export function AccessContent({ onOpenQr }: Props) {
                 className={`min-h-[58px] flex-row items-center gap-3 px-1 py-3 active:opacity-60 ${index === 0 ? 'border-b border-divider' : ''}`}
               >
                 <Icon width={28} height={28} color={colors.muted} accessible={false} />
-                <Text className="flex-1 text-[16px] font-medium leading-6 text-heading">{label}</Text>
+                <Text className="flex-1 text-size-16 font-medium leading-6 text-heading">{label}</Text>
                 <ChevronRight width={22} height={22} color={colors.muted} accessible={false} />
               </Pressable>
             ))}
@@ -92,14 +92,14 @@ export function AccessContent({ onOpenQr }: Props) {
           accessibilityRole="button"
           accessibilityLabel="도움이 필요하신가요? 문의하기"
           onPress={() => open(mockAccessDetails.support)}
-          className={`mt-2 min-h-[50px] gap-2 rounded-lg bg-canvas px-3 py-3 active:opacity-60 ${largeText ? '' : 'flex-row items-center'}`}
+          className={`mt-2 min-h-[50px] gap-content rounded-8 bg-canvas px-3 py-3 active:opacity-60 ${largeText ? '' : 'flex-row items-center'}`}
         >
-          <View className="flex-1 flex-row items-center gap-2">
+          <View className="flex-1 flex-row items-center gap-content">
             <Headset width={24} height={24} color={colors.muted} accessible={false} />
-            <Text className="flex-shrink text-[13px] leading-5 text-muted">도움이 필요하신가요?</Text>
+            <Text className="flex-shrink text-body-small text-muted">도움이 필요하신가요?</Text>
           </View>
           <View className="flex-row items-center gap-1">
-            <Text className="text-[13px] font-bold leading-5 text-primary">문의하기</Text>
+            <Text className="text-size-13 font-bold leading-5 text-primary">문의하기</Text>
             <ArrowRight width={20} height={20} color={colors.primary.DEFAULT} accessible={false} />
           </View>
         </Pressable>

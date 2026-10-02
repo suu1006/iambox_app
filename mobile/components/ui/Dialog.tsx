@@ -12,13 +12,13 @@ type CardProps = DialogContent & {
 
 export function DialogCard({ title, description, lines, onClose, confirmLabel = '닫기', titleRef }: CardProps) {
   return (
-    <View accessibilityViewIsModal onAccessibilityEscape={onClose} className="mx-auto max-h-full w-full max-w-[420px] rounded-3xl bg-surface p-6">
+    <View accessibilityViewIsModal onAccessibilityEscape={onClose} className="mx-auto max-h-full w-full max-w-[420px] rounded-dialog bg-surface p-6">
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Text ref={titleRef} accessible accessibilityRole="header" className="text-[22px] font-bold text-heading">{title}</Text>
-        {description ? <Text className="mt-2 text-[14px] leading-5 text-muted">{description}</Text> : null}
+        <Text ref={titleRef} accessible accessibilityRole="header" className="text-size-22 font-bold text-heading">{title}</Text>
+        {description ? <Text className="mt-2 text-size-14 leading-5 text-muted">{description}</Text> : null}
         {lines?.length ? (
-          <View className="mt-5 gap-3 rounded-2xl bg-primary-50 p-4">
-            {lines.map((line) => <Text key={line} className="text-[15px] leading-6 text-heading">{line}</Text>)}
+          <View className="mt-5 gap-3 rounded-thumbnail bg-primary-50 p-4">
+            {lines.map((line) => <Text key={line} className="text-size-15 leading-6 text-heading">{line}</Text>)}
           </View>
         ) : null}
       </ScrollView>
@@ -28,7 +28,7 @@ export function DialogCard({ title, description, lines, onClose, confirmLabel = 
 }
 
 export function DialogBackdrop({ className = '', ...props }: ViewProps & { className?: string }) {
-  return <View className={`flex-1 justify-center bg-black/40 px-6 py-12 ${className}`} {...props} />;
+  return <View className={`flex-1 justify-center bg-black/40 px-screen py-12 ${className}`} {...props} />;
 }
 
 export function focusAccessibility(ref: { current: Text | null }) {

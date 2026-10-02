@@ -15,10 +15,10 @@ test('native 기본 버튼은 기존 크기·라벨·접근성·아이콘을 유
   const Icon = () => null;
   const tree = Button({ label: '보관하기', LeadingIcon: Icon, TrailingIcon: Icon });
   assert.equal(tree.props.accessibilityRole, 'button');
-  assert.equal(tree.props.className, 'min-h-[48px] flex-row items-center justify-center py-3 gap-2 rounded-xl bg-primary px-4 active:opacity-70 ');
+  assert.equal(tree.props.className, 'min-h-[48px] flex-row items-center justify-center py-3 gap-content rounded-button bg-primary px-4 active:opacity-70 ');
   const [leading, label, trailing] = children(tree);
   assert.equal(label.props.children, '보관하기');
-  assert.equal(label.props.className, 'flex-shrink font-bold leading-6 text-[16px] text-onPrimary');
+  assert.equal(label.props.className, 'flex-shrink text-button text-onPrimary');
   assert.equal(leading.props.width, 24); assert.equal(trailing.props.width, 20);
   assert.equal(leading.props.color, '#FFFFFF'); assert.equal(leading.props.accessible, false);
   assert.equal(trailing.props.accessible, false);
@@ -35,7 +35,7 @@ test('native 링크 버튼은 호출부의 이벤트·비활성·style·접근�
   assert.equal(tree.props.accessibilityLabel, '이용 내역 보기');
   assert.equal(tree.props.accessibilityHint, '예시 안내 열기');
   tree.props.onPress(event); assert.equal(events[0], event);
-  assert.equal(children(tree)[0].props.className, 'flex-shrink font-bold leading-6 text-[14px] text-primary');
+  assert.equal(children(tree)[0].props.className, 'flex-shrink text-button-link text-primary');
 });
 
 const tones = [
@@ -44,15 +44,15 @@ const tones = [
   ['neutral', 'bg-divider', 'text-muted', '#E8E9EF', '#667085'],
 ];
 const sizes = [
-  ['default', 'rounded-full px-3 py-1', 'text-[12px] leading-[18px]', 12, 18],
-  ['compact', 'w-5 items-center rounded-[4px] py-0.5', 'text-center text-[11px] leading-4', 11, 16],
+  ['default', 'rounded-pill px-3 py-1', 'text-badge', 12, 18],
+  ['compact', 'w-5 items-center rounded-badge py-0.5', 'text-center text-badge-compact', 11, 16],
 ];
 for (const [tone, bg, fg, backgroundColor, color] of tones) {
   for (const [size, container, label, fontSize, lineHeight] of sizes) {
     test(`${tone}/${size} 배지는 양쪽 렌더러에서 색상·크기·라벨을 표시한다`, () => {
       const native = ui('native').Badge({ label: 'M', tone, size });
       assert.equal(native.props.className, `self-start ${container} ${bg}`);
-      assert.equal(children(native)[0].props.className, `font-bold ${label} ${fg}`);
+      assert.equal(children(native)[0].props.className, `${label} ${fg}`);
       assert.equal(children(native)[0].props.children, 'M');
       const web = ui('web').Badge({ label: 'M', tone, size });
       assert.equal(web.type, 'span'); assert.equal(web.props.children, 'M');
@@ -67,7 +67,7 @@ for (const [tone, bg, fg, backgroundColor, color] of tones) {
 
 test('배지 기본값은 solid/default다', () => {
   const native = ui('native').Badge({ label: '이용 중' });
-  assert.equal(native.props.className, 'self-start rounded-full px-3 py-1 bg-primary');
+  assert.equal(native.props.className, 'self-start rounded-pill px-3 py-1 bg-primary');
   const web = ui('web').Badge({ label: '이용 중' });
   assert.equal(web.props.style.backgroundColor, '#844CCF');
   assert.equal(web.props.style.fontSize, 12);

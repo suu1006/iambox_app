@@ -1,3 +1,4 @@
+import { radii } from '@iambox/design-tokens';
 import { StyleSheet, View } from 'react-native';
 import LogoSymbol from '../../assets/iambox-logo-symbol.svg';
 import colors from '@iambox/design-tokens/colors.json';
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
   container: {
     width: 28,
     height: 31,
-    borderRadius: 5,
+    borderRadius: radii.logo,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',

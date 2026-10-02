@@ -5,6 +5,7 @@ import {
 import { Pressable, StyleSheet, View } from 'react-native';
 import GorhomBottomSheet from '@gorhom/bottom-sheet';
 import colors from '@iambox/design-tokens/colors.json';
+import { nativeShadows, radii } from '@iambox/design-tokens';
 import { getDefaultBottomSheetSnapPoints } from '../../utils/bottomSheetLayout';
 
 export type BottomSheetHandle = { snapToIndex: (index: number) => void };
@@ -143,13 +144,7 @@ const styles = StyleSheet.create({
   // Continue measuring while space is insufficient so smaller headers can restore the sheet.
   measurement: { position: 'absolute', top: 0, left: 0, right: 0, opacity: 0 },
   handle: { minHeight: 44, alignItems: 'center', justifyContent: 'center' },
-  handleIndicator: { width: 40, height: 4, borderRadius: 2, backgroundColor: colors.inactive },
-  background: { backgroundColor: colors.surface, borderTopLeftRadius: 24, borderTopRightRadius: 24 },
-  shadow: {
-    shadowColor: colors.heading,
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 6,
-  },
+  handleIndicator: { width: 40, height: 4, borderRadius: radii.handle, backgroundColor: colors.inactive },
+  background: { backgroundColor: colors.surface, borderTopLeftRadius: radii.sheet, borderTopRightRadius: radii.sheet },
+  shadow: nativeShadows.sheet,
 });

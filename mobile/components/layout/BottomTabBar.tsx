@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { tabs, type TabKey } from '../../navigation/tabs';
 import colors from '@iambox/design-tokens/colors.json';
+import { nativeShadows } from '@iambox/design-tokens';
 
 type Props = { activeTab: TabKey; onTabChange: (tab: TabKey) => void };
 
@@ -18,10 +19,10 @@ export function BottomTabBar({ activeTab, onTabChange }: Props) {
             accessibilityLabel={label}
             accessibilityState={{ selected }}
             onPress={() => onTabChange(key)}
-            className="min-h-[80px] flex-1 items-center pb-1 pt-[2px] active:opacity-60"
+            className="min-h-[80px] flex-1 items-center pb-1 pt-0.5 active:opacity-60"
           >
-            <View className="mb-[6px] h-[52px] items-center justify-end">
-              <View className={isQr ? 'h-12 w-12 rounded-full bg-primary' : undefined} style={isQr ? styles.qrShadow : undefined}>
+            <View className="mb-1.5 h-[52px] items-center justify-end">
+              <View className={isQr ? 'h-12 w-12 rounded-pill bg-primary' : undefined} style={isQr ? styles.qrShadow : undefined}>
                 <Icon
                   width={isQr ? 48 : 26}
                   height={isQr ? 48 : 26}
@@ -30,7 +31,7 @@ export function BottomTabBar({ activeTab, onTabChange }: Props) {
                 />
               </View>
             </View>
-            <Text className={`text-center text-[11px] ${selected ? 'font-bold text-primary' : 'font-medium text-inactive'}`}>
+            <Text className={`text-center text-size-11 ${selected ? 'font-bold text-primary' : 'font-medium text-inactive'}`}>
               {label}
             </Text>
           </Pressable>
@@ -43,11 +44,5 @@ export function BottomTabBar({ activeTab, onTabChange }: Props) {
 // Preserve the native hairline and platform-specific shadow values.
 const styles = StyleSheet.create({
   divider: { height: StyleSheet.hairlineWidth },
-  qrShadow: {
-    shadowColor: colors.primary.DEFAULT,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    elevation: 3,
-  },
+  qrShadow: nativeShadows.qrAction,
 });

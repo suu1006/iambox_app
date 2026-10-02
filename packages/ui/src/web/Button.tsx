@@ -23,8 +23,8 @@ export function Button({ label, variant = 'primary', LeadingIcon, TrailingIcon, 
     <button type={type} aria-label={accessibilityLabel}
       className={`iambox-ui-button ${className}`} style={containerStyle} {...props}>
       {LeadingIcon && <LeadingIcon width={buttonBaseRule.leadingIconSize} height={buttonBaseRule.leadingIconSize} color={rule.color} aria-hidden={true} focusable={false} />}
-      <span style={{ flexShrink: 1, fontWeight: buttonBaseRule.fontWeight,
-        lineHeight: `${buttonBaseRule.lineHeight}px`, fontSize: rule.fontSize }}>{label}</span>
+      <span style={{ flexShrink: 1, fontWeight: rule.fontWeight, letterSpacing: rule.letterSpacing,
+        lineHeight: `${rule.lineHeight}px`, fontSize: rule.fontSize }}>{label}</span>
       {TrailingIcon && <TrailingIcon width={buttonBaseRule.trailingIconSize} height={buttonBaseRule.trailingIconSize} color={rule.color} aria-hidden={true} focusable={false} />}
     </button>
   );
