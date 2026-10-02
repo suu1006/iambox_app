@@ -9,12 +9,12 @@ type Props = {
   query: string;
   filterCount: number;
   onChangeQuery: (query: string) => void;
-  onFocus: () => void;
+  onFocusSearch: () => void;
   onOpenFilter: () => void;
 };
 
 export function LocationSearchHeader({
-  query, filterCount, onChangeQuery, onFocus, onOpenFilter,
+  query, filterCount, onChangeQuery, onFocusSearch, onOpenFilter,
 }: Props) {
   const { width, fontScale } = useWindowDimensions();
   const stacked = width < 320 || fontScale > 1.5;
@@ -28,7 +28,7 @@ export function LocationSearchHeader({
           placeholderTextColor={colors.muted}
           value={query}
           onChangeText={onChangeQuery}
-          onFocus={onFocus}
+          onFocus={onFocusSearch}
           autoCorrect={false}
           autoCapitalize="none"
           returnKeyType="search"

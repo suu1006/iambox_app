@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@gorhom/bottom-sheet": "5.2.14",
     "@iambox/contracts": "workspace:*",
     "@iambox/design-tokens": "workspace:*",
+    "@iambox/ui": "workspace:*",
     "@iambox/utils": "workspace:*",
-    "@gorhom/bottom-sheet": "5.2.14",
     "@mj-studio/react-native-naver-map": "2.9.0",
+    "@react-navigation/native": "^7.5.0",
+    "@react-navigation/native-stack": "^7.20.0",
     "expo": "~57.0.25",
     "expo-brightness": "~57.0.2",
     "expo-build-properties": "~57.0.22",
@@ -21,9 +24,9 @@
     "react-native-gesture-handler": "~2.32.0",
     "react-native-reanimated": "4.5.1",
     "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.2",
     "react-native-svg": "15.15.4",
-    "react-native-worklets": "0.10.1",
-    "@iambox/ui": "workspace:*"
+    "react-native-worklets": "0.10.1"
   },
   "devDependencies": {
     "@react-native/metro-config": "0.86.3",
