@@ -13,7 +13,7 @@ function loadList(dimensions = { width: 390, height: 844, fontScale: 1, scale: 3
   return loadComponent(filename, dimensions).LocationList;
 }
 
-function loadComponent(filename, dimensions) {
+function loadComponent(filename, dimensions, overrides = {}) {
   const localRequire = createRequire(filename);
   const code = ts.transpileModule(readFileSync(filename, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX },
@@ -22,6 +22,7 @@ function loadComponent(filename, dimensions) {
   vm.runInNewContext(code, {
     module, exports: module.exports,
     require: (id) => {
+      if (Object.hasOwn(overrides, id)) return overrides[id];
       if (id === '@iambox/ui/native' || (id.startsWith('.') && /\.tsx?$/.test(id))) {
         return loadComponent(localRequire.resolve(id), dimensions);
       }
@@ -35,7 +36,7 @@ function loadComponent(filename, dimensions) {
         Button: loadComponent(path.resolve(__dirname, '../components/ui/Button.tsx'), dimensions).Button,
       };
       if (id.endsWith('.svg')) return { default: 'Icon' };
-      if (id === '../../utils/formatLocationPrice') return localRequire(`${id}.ts`);
+      if (id === '../../utils/formatLocationPrice' || id === '../../utils/filterLocations') return localRequire(`${id}.ts`);
       return localRequire(id);
     },
   }, { filename });
@@ -59,6 +60,64 @@ const location = {
   priceFromKrw: 55825, priceBasis: '예시 시작 요금',
   photoSource: { uri: 'https://example.invalid/storage.png' }, badge: '예시 시설',
 };
+
+test('접힘에서 펼침으로 이동하고 다시 접어도 목록의 시각·터치·접근성 노출을 유지한다', () => {
+  const states = [];
+  let cursor = 0;
+  const LocationList = loadList();
+  const { LocationsContent } = loadComponent(
+    path.resolve(__dirname, '../features/locations/LocationsContent.tsx'),
+    undefined,
+    {
+      react: {
+        useState: (initial) => {
+          const slot = cursor++;
+          if (!(slot in states)) states[slot] = initial;
+          return [states[slot], (value) => { states[slot] = value; }];
+        },
+        useRef: () => ({ current: null }),
+        useMemo: (compute) => compute(),
+        useCallback: (callback) => callback,
+        useEffect() {},
+      },
+      '../../components/ui': { BottomSheet: 'Sheet' },
+      '../../mocks/locations': { mockLocations: [location] },
+      './LocationList': { LocationList },
+      './LocationMap': { LocationMap: 'Map' },
+      './LocationDetail': { LocationDetail: 'Detail' },
+      './LocationSearchHeader': { LocationSearchHeader: 'Search' },
+      './LocationFilterModal': { LocationFilterModal: 'Filter' },
+    },
+  );
+  for (const nextIndex of [2, 0]) {
+    cursor = 0;
+    const tree = LocationsContent({ onBack() {} });
+    const sheet = nodes(tree).find((node) => node.type === 'Sheet');
+    const listElement = nodes(tree).find((node) => node.type === LocationList);
+    const list = LocationList(listElement.props);
+    assert.notEqual(list.props.style?.opacity, 0, '접힌 상태와 이동 중에도 목록을 투명하게 숨기면 안 된다');
+    assert.notEqual(list.props.pointerEvents, 'none');
+    assert.notEqual(list.props.accessibilityElementsHidden, true);
+    assert.notEqual(list.props.importantForAccessibility, 'no-hide-descendants');
+    assert.equal(list.props.data[0], location);
+    sheet.props.onChange(nextIndex);
+  }
+  cursor = 0;
+  const tree = LocationsContent({ onBack() {} });
+  const listElement = nodes(tree).find((node) => node.type === LocationList);
+  assert.notEqual(LocationList(listElement.props).props.style?.opacity, 0, '다시 접은 뒤에도 행이 유지되어야 한다');
+});
+
+test('큰 목록은 초기 10~20개와 제한된 배치로 렌더링하고 마지막 지점까지 가상 목록에 전달한다', () => {
+  const LocationList = loadList();
+  const locations = Array.from({ length: 100 }, (_, index) => ({ ...location, id: `location-${index}` }));
+  const list = LocationList({ locations, onSelectLocation() {} });
+  assert.ok(list.props.initialNumToRender >= 10 && list.props.initialNumToRender <= 20);
+  assert.ok(list.props.maxToRenderPerBatch > 0 && list.props.maxToRenderPerBatch <= 20);
+  assert.ok(list.props.windowSize > 1 && list.props.windowSize <= 5);
+  assert.equal(list.props.data.length, 100, '초기 렌더링 개수로 데이터를 잘라 나머지 지점을 누락하면 안 된다');
+  assert.equal(list.props.keyExtractor(list.props.data[99]), 'location-99');
+});
 
 test('선택한 지점만 강조하고 행 선택에 해당 지점을 전달하며 별도 더보기 버튼은 표시하지 않는다', () => {
   const LocationList = loadList();

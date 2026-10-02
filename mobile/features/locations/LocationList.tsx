@@ -11,13 +11,12 @@ export type LocationListProps = {
   selectedLocationId?: string;
   onSelectLocation: (location: LocationPoint) => void;
   header?: ReactNode;
-  visible?: boolean;
   emptyMessage?: string;
 };
 
 /** Sheet-aware list. Selection and navigation belong to the parent screen. */
 export function LocationList({
-  locations, selectedLocationId, onSelectLocation, header, visible = true,
+  locations, selectedLocationId, onSelectLocation, header,
   emptyMessage = '표시할 지점이 없습니다.',
 }: LocationListProps) {
   const { width, fontScale } = useWindowDimensions();
@@ -29,21 +28,14 @@ export function LocationList({
       data={locations}
       keyExtractor={(location: LocationPoint) => location.id}
       extraData={selectedLocationId}
-      style={{ opacity: visible ? 1 : 0 }}
-      pointerEvents={visible ? 'auto' : 'none'}
-      accessibilityElementsHidden={!visible}
-      importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
+      // Keep rows visible through sheet gestures; virtualize larger datasets.
+      initialNumToRender={10}
+      maxToRenderPerBatch={10}
+      windowSize={5}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag"
       contentContainerStyle={{ paddingBottom: 24 }}
-      ListHeaderComponent={(
-        <View>
-          {header}
-          <Text className="px-6 pb-3 pt-4 text-[13px] leading-5 text-muted">
-            화면 확인용 예시 지점·이미지·요금·이용 가능 사이즈입니다. 실제 운영 정보와 다릅니다.
-          </Text>
-        </View>
-      )}
+      ListHeaderComponent={header ? <View>{header}</View> : undefined}
       ListEmptyComponent={(
         <View className="px-6 py-10">
           <Text className="text-center text-[15px] leading-6 text-muted">{emptyMessage}</Text>
