@@ -1,0 +1,14 @@
+<svg width="320" height="220" viewBox="0 0 320 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="169" cy="192" rx="91" ry="15" fill="#EDE8FF"/>
+<path d="M76 50c0-20 16-36 36-36h88c20 0 36 16 36 36v80c0 20-16 36-36 36h-88c-20 0-36-16-36-36V50Z" fill="#F4F0FF"/>
+<path d="M238 32c-12 0-22 9.7-22 21.7 0 16.3 22 38.3 22 38.3s22-22 22-38.3C260 41.7 250 32 238 32Z" fill="#7447F5"/>
+<circle cx="238" cy="54" r="8" fill="white"/>
+<path d="M91 105 163 76l77 28-73 32-76-31Z" fill="#FFD084"/>
+<path d="m91 105 76 31v58l-76-30v-59Z" fill="#F5B75F"/>
+<path d="m240 104-73 32v58l73-31v-59Z" fill="#E9A651"/>
+<path d="m137 86 25-10 27 10-25 11-27-11Z" fill="#8A63F7"/>
+<path d="m137 86 27 11v32l-27-11V86Z" fill="#7447F5"/>
+<path d="m189 86-25 11v32l25-11V86Z" fill="#6940E8"/>
+<path d="M38 132h28M27 145h39" stroke="#7447F5" stroke-width="7" stroke-linecap="round"/>
+<text x="188" y="163" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#5E5E66">iambox</text>
+</svg>

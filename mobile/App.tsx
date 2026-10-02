@@ -4,13 +4,14 @@ import { View } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { AppHeader, BottomTabBar, PlaceholderContent } from './components/layout';
+import { BottomTabBar } from './components/layout';
 import { HomeContent } from './features/home/HomeContent';
 import { AccessContent } from './features/access/AccessContent';
 import { LocationsContent } from './features/locations/LocationsContent';
 import { MyContent } from './features/my/MyContent';
+import { DeliveryContent } from './features/delivery/DeliveryContent';
 import { QrAccessModal } from './features/access/QrAccessModal';
-import { tabs, type TabKey } from './navigation/tabs';
+import type { TabKey } from './navigation/tabs';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('home');
@@ -24,7 +25,6 @@ export default function App() {
     setQrVisible(false);
     setActiveTab(tab);
   };
-  const selectedTab = tabs.find((tab) => tab.key === activeTab)!;
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -46,10 +46,7 @@ export default function App() {
             ) : activeTab === 'my' ? (
               <MyContent onMyBoxPress={() => selectTab('access')} />
             ) : (
-              <>
-                <AppHeader title={selectedTab.label} />
-                <PlaceholderContent label={selectedTab.label} Icon={selectedTab.Icon} />
-              </>
+              <DeliveryContent />
             )}
             <BottomTabBar activeTab={activeTab} onTabChange={selectTab} />
           </View>
