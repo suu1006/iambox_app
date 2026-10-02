@@ -13,3 +13,5 @@ minimumReleaseAgeExclude:
   - '@nestjs/platform-express@12.1.1'
 overrides:
   react-dom: 19.2.3
+patchedDependencies:
+  '@mj-studio/react-native-naver-map@2.9.0': patches/@mj-studio__react-native-naver-map@2.9.0.patch

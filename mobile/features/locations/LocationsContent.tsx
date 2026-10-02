@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { BackHandler, Keyboard, Pressable, Text, View } from 'react-native';
-import { BottomSheet, type BottomSheetHandle } from '../../components/ui';
+import { BottomSheet, Button, type BottomSheetHandle } from '../../components/ui';
 import { mockLocations } from '../../mocks/locations';
 import { LocationMap } from './LocationMap';
 import { LocationList } from './LocationList';
@@ -19,6 +19,7 @@ type Props = {
 
 export function LocationsContent({ onBack, onSelectLocation, isFocused }: Props) {
   const [selectedBranchId, setSelectedBranchId] = useState<string | null>(null);
+  const [clusterMemberIds, setClusterMemberIds] = useState<readonly string[] | null>(null);
   const sheetRef = useRef<BottomSheetHandle>(null);
   const [sheetIndex, setSheetIndex] = useState(0);
   const [query, setQuery] = useState('');
@@ -30,8 +31,10 @@ export function LocationsContent({ onBack, onSelectLocation, isFocused }: Props)
   const availableSizes = useMemo(() => [...new Set(mockLocations.flatMap((location) => location.availableSizes ?? []))], []);
   const selectedBranch = locations.find((location) => location.id === selectedBranchId);
   const visibleHighlightedId = selectedBranch?.id;
+  const listLocations = clusterMemberIds ? locations.filter((location) => clusterMemberIds.includes(location.id)) : locations;
   useEffect(() => {
     if (selectedBranchId && !locations.some((location) => location.id === selectedBranchId)) setSelectedBranchId(null);
+    setClusterMemberIds(null);
   }, [locations]);
   const expandSheet = () => sheetRef.current?.snapToIndex(2);
   const searchHeaderProps = {
@@ -48,6 +51,16 @@ export function LocationsContent({ onBack, onSelectLocation, isFocused }: Props)
     setSelectedBranchId(location.id);
     onSelectLocation(location);
   }, [onSelectLocation]);
+  const clearSelection = useCallback(() => {
+    setSelectedBranchId(null);
+    setClusterMemberIds(null);
+  }, []);
+  const selectClusterLocations = useCallback((members: readonly LocationPoint[]) => {
+    setSelectedBranchId(null);
+    setClusterMemberIds(members.map((location) => location.id));
+    sheetRef.current?.snapToIndex(2);
+  }, []);
+
   const handleBack = useCallback(() => {
     if (filterVisible) {
       setFilterVisible(false);
@@ -83,6 +96,7 @@ export function LocationsContent({ onBack, onSelectLocation, isFocused }: Props)
             locations={locations}
             selectedLocationId={visibleHighlightedId}
             onSelectLocation={selectLocation}
+            onSelectClusterLocations={selectClusterLocations}
           />
           <BottomSheet
             ref={sheetRef}
@@ -90,11 +104,16 @@ export function LocationsContent({ onBack, onSelectLocation, isFocused }: Props)
             accessibilityLabel="지점 목록"
           >
             <LocationList
-              locations={locations}
+              locations={listLocations}
               selectedLocationId={visibleHighlightedId}
               onSelectLocation={selectLocation}
               emptyMessage="검색 결과가 없어요. 다른 검색어나 사이즈를 선택해 주세요."
-              header={selectedSizes.length ? (
+              header={selectedSizes.length || clusterMemberIds ? (
+                <View>
+                {clusterMemberIds && <View className="px-screen pb-3">
+                  <Text className="text-size-14 font-bold text-heading">같은 위치의 지점 {listLocations.length}곳</Text>
+                  <Button variant="link" label="전체 지점 목록 보기" onPress={clearSelection} />
+                </View>}
                 <View className="flex-row flex-wrap gap-content px-screen pt-1">
                   {selectedSizes.map((size) => (
                     <Pressable
@@ -106,6 +125,7 @@ export function LocationsContent({ onBack, onSelectLocation, isFocused }: Props)
                       <CloseIcon width={14} height={14} color={colors.primary.DEFAULT} accessible={false} />
                     </Pressable>
                   ))}
+                </View>
                 </View>
               ) : undefined}
             />

@@ -9,4 +9,6 @@ export type LocationData = {
   priceBasis: string;
   badge?: string;
   availableSizes?: readonly string[];
+  district?: string;
+  thumbnailUrl?: string;
 };

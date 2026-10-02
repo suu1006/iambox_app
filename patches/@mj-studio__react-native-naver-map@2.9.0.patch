@@ -1,0 +1,234 @@
+diff --git a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/GetOverlayImage.kt b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/GetOverlayImage.kt
+index 29b728d408e6fe939149b26e4df57cc94c03fe27..b6e5da91aca05a5f713619428f568414f18fc1b3 100644
+--- a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/GetOverlayImage.kt
++++ b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/GetOverlayImage.kt
+@@ -61,6 +61,16 @@ internal fun getOverlayImage(
+   val assetName = map["assetName"]?.toString() ?: ""
+   val reuseIdentifier = map["reuseIdentifier"]?.toString() ?: ""
+ 
++  val cacheKey = reuseIdentifier.ifEmpty {
++    assetUri.ifEmpty { assetName.ifEmpty { rnAssetUri } }
++  }
++  if (cacheKey.isNotEmpty()) {
++    OverlayImageCache[cacheKey]?.let {
++      callback(it)
++      return
++    }
++  }
++
+   // http, https, asset, file all works
+   if (assetUri.isNotEmpty()) {
+     val key = reuseIdentifier.ifEmpty { assetUri }
+diff --git a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/OverlayImageCache.kt b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/OverlayImageCache.kt
+index ff96f0ec48354d262e7af9ebad60c7b84ae440c7..26891d206ca5b84a3817f135c1efecaa92d8c72b 100644
+--- a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/OverlayImageCache.kt
++++ b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/OverlayImageCache.kt
+@@ -1,11 +1,14 @@
+ package com.mjstudio.reactnativenavermap.util.image
+ 
+ import com.naver.maps.map.overlay.OverlayImage
+-import java.util.concurrent.ConcurrentHashMap
++import java.util.LinkedHashMap
+ 
+ object OverlayImageCache {
+-  private val store: MutableMap<String, OverlayImage> = ConcurrentHashMap()
++  private val store = object : LinkedHashMap<String, OverlayImage>(128, 0.75f, true) {
++    override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, OverlayImage>?): Boolean = size > 128
++  }
+ 
++  @Synchronized
+   fun put(
+     uri: String,
+     image: OverlayImage,
+@@ -13,5 +16,6 @@ object OverlayImageCache {
+     store[uri] = image
+   }
+ 
++  @Synchronized
+   operator fun get(uri: String): OverlayImage? = store[uri]
+ }
+diff --git a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapImageRenderableOverlay.kt b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapImageRenderableOverlay.kt
+index 932f6042f662a35b0e01757d4ef8312cb88ede58..6ef648d90380346f002210106f384318a4045f7c 100644
+--- a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapImageRenderableOverlay.kt
++++ b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapImageRenderableOverlay.kt
+@@ -18,9 +18,11 @@ abstract class RNCNaverMapImageRenderableOverlay<T : Overlay>(
+     }
+   }
+   private var lastImage: ReadableMap? = null
++  private var imageRequestRevision = 0L
+ 
+   @CallSuper
+   override fun onDropViewInstance() {
++    imageRequestRevision += 1
+     imageHolder?.onDetach()
+   }
+ 
+@@ -36,11 +38,13 @@ abstract class RNCNaverMapImageRenderableOverlay<T : Overlay>(
+ 
+   fun setImage(image: ReadableMap?) {
+     lastImage = image
++    val revision = ++imageRequestRevision
+     if (skipTryRender()) return
+-    setOverlayAlpha(0f)
+     getOverlayImage(imageHolder!!, context, image?.toHashMap()) {
+-      setOverlayImage(it)
+-      setOverlayAlpha(1f)
++      if (revision == imageRequestRevision) {
++        setOverlayImage(it)
++        // Keep the alpha prop and the previous image while the replacement loads.
++      }
+     }
+   }
+ }
+diff --git a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapTaggedImageRenderer.kt b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapTaggedImageRenderer.kt
+index 2242588d2d0985f70d69fa079856a611df829ff9..e8deed4c46d4180f53a79f6b7757f7a5b45d8841 100644
+--- a/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapTaggedImageRenderer.kt
++++ b/android/src/main/java/com/mjstudio/reactnativenavermap/util/image/RNCNaverMapTaggedImageRenderer.kt
+@@ -11,6 +11,7 @@ internal class RNCNaverMapTaggedImageRenderer(
+ ) {
+   private var imageHolder: DraweeHolder<GenericDraweeHierarchy>? = null
+   private var lastImage: ReadableMap? = null
++  private var imageRequestRevision = 0L
+ 
+   fun onAttach() {
+     imageHolder =
+@@ -20,6 +21,7 @@ internal class RNCNaverMapTaggedImageRenderer(
+   }
+ 
+   fun onDetach() {
++    imageRequestRevision += 1
+     imageHolder?.onDetach()
+   }
+ 
+@@ -28,6 +30,9 @@ internal class RNCNaverMapTaggedImageRenderer(
+     onImageLoaded: (OverlayImage?) -> Unit,
+   ) {
+     lastImage = image
+-    getOverlayImage(imageHolder!!, context, image?.toHashMap(), onImageLoaded)
++    val revision = ++imageRequestRevision
++    getOverlayImage(imageHolder!!, context, image?.toHashMap()) {
++      if (revision == imageRequestRevision) onImageLoaded(it)
++    }
+   }
+ }
+diff --git a/ios/Overlay/Marker/RNCNaverMapMarker.mm b/ios/Overlay/Marker/RNCNaverMapMarker.mm
+index 7f408dfe72e5c09d1ba923b03ca8fb662784ca1f..d75bbd7825fe3347cd8ed12f77c1bc5abade36cf 100644
+--- a/ios/Overlay/Marker/RNCNaverMapMarker.mm
++++ b/ios/Overlay/Marker/RNCNaverMapMarker.mm
+@@ -17,6 +17,7 @@ using namespace facebook::react;
+ @implementation RNCNaverMapMarker {
+   RNCNaverMapImageCanceller _imageCanceller;
+   BOOL _isImageSetFromSubview;
++  NSUInteger _imageRequestRevision;
+ }
+ 
+ + (bool)shouldBeRecycled {
+@@ -83,11 +84,11 @@ using namespace facebook::react;
+ 
+ - (void)setImage:(facebook::react::RNCNaverMapMarkerImageStruct)image {
+   _image = image;
++  const NSUInteger revision = ++_imageRequestRevision;
+   // If subview exists for custom marker, then skip image
+   if (_isImageSetFromSubview) {
+     return;
+   }
+-  _inner.alpha = 0;
+ 
+   // Cancel pending request
+   if (_imageCanceller) {
+@@ -96,8 +97,9 @@ using namespace facebook::react;
+   }
+ 
+   _imageCanceller = nmap::getImage(image, ^(NMFOverlayImage* _Nullable image) {
+-    runOnMain([self, image]() {
+-      self.inner.alpha = 1;
++    runOnMain([self, image, revision]() {
++      if (revision != self->_imageRequestRevision || self->_isImageSetFromSubview) return;
++      // Image completion must not overwrite the alpha prop used by cluster transitions.
+       if (image) {
+         self.inner.iconImage = image;
+       }
+@@ -119,6 +121,7 @@ using namespace facebook::react;
+ }
+ 
+ - (void)insertReactSubview:(UIView*)subview atIndex:(NSInteger)atIndex {
++  ++_imageRequestRevision;
+   if (_imageCanceller) {
+     _imageCanceller();
+     _imageCanceller = nil;
+diff --git a/ios/Util/Image/BoundedImageCache.h b/ios/Util/Image/BoundedImageCache.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..9aaa7af1a4ac5b95414c0e5360ac5142681df807
+--- /dev/null
++++ b/ios/Util/Image/BoundedImageCache.h
+@@ -0,0 +1,29 @@
++#pragma once
++#include <algorithm>
++#include <deque>
++#include <string>
++#include <unordered_map>
++
++// Bounded ownership; mounted overlays retain their own image after eviction.
++template <typename T> class NaverMapBoundedImageCache {
++  const size_t capacity;
++  std::unordered_map<std::string, T> images;
++  std::deque<std::string> insertionOrder;
++public:
++  explicit NaverMapBoundedImageCache(size_t limit = 128) : capacity(std::max<size_t>(1, limit)) {}
++  T get(const std::string& key) const {
++    auto found = images.find(key);
++    return found == images.end() ? T{} : found->second;
++  }
++  size_t size() const { return images.size(); }
++  void put(const std::string& key, T image) {
++    if (images.find(key) == images.end()) {
++      while (images.size() >= capacity) {
++        images.erase(insertionOrder.front());
++        insertionOrder.pop_front();
++      }
++      insertionOrder.push_back(key);
++    }
++    images[key] = image;
++  }
++};
+diff --git a/ios/Util/Image/ImageUtil.h b/ios/Util/Image/ImageUtil.h
+index d2ceb98536279afd3f0ca762fc5dfc4b732119f2..673f8515af4049da51312deb17deb9652da99c03 100644
+--- a/ios/Util/Image/ImageUtil.h
++++ b/ios/Util/Image/ImageUtil.h
+@@ -6,6 +6,7 @@
+ //
+ 
+ #import "FnUtil.h"
++#include "BoundedImageCache.h"
+ #import "RNCNaverMapOverlayImageLoader.h"
+ #import <Foundation/Foundation.h>
+ #import <NMapsMap/NMapsMap.h>
+@@ -14,7 +15,7 @@
+ 
+ typedef void (^RNCNaverMapOverlayImageHandler)(NMFOverlayImage* _Nullable);
+ 
+-static std::unordered_map<std::string, NMFOverlayImage*> imageCache;
++static NaverMapBoundedImageCache<NMFOverlayImage*> imageCache(128);
+ 
+ static RNCNaverMapImageCanceller _Nullable loadImageWith(
+     std::string uri, std::string cacheKey, RNCNaverMapOverlayImageHandler _Nonnull callback) {
+@@ -31,7 +32,7 @@ static RNCNaverMapImageCanceller _Nullable loadImageWith(
+         NMFOverlayImage* overlayImage = [NMFOverlayImage overlayImageWithImage:image
+                                                                reuseIdentifier:getNsStr(cacheKey)];
+         callback(overlayImage);
+-        imageCache[cacheKey] = overlayImage;
++        imageCache.put(cacheKey, overlayImage);
+       });
+ }
+ 
+@@ -79,8 +80,8 @@ static RNCNaverMapImageCanceller _Nullable getImage(
+   if (rnAssetUri.size() || httpUri.size()) {
+     std::string uri = rnAssetUri.size() ? rnAssetUri : httpUri;
+     std::string key = reuseIdentifier.size() ? reuseIdentifier : uri;
+-    if (imageCache.find(key) != imageCache.end()) {
+-      callback(imageCache[key]);
++    if (auto cachedImage = imageCache.get(key)) {
++      callback(cachedImage);
+       return ^{
+       };
+     } else {

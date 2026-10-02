@@ -285,3 +285,23 @@ test('필터로 선택 지점이 사라지면 강조를 해제하고 전체 결�
   assert.equal(map.find('LocationMap').props.selectedLocationId, undefined);
   assert.deepEqual(Array.from(map.find('LocationList').props.locations, (location) => location.id), ['mock-seongsu']);
 });
+test('클러스터 구성 목록에서 바로 상세로 이동하고 복귀할 목록을 유지한다', () => {
+  const selected = [];
+  const props = { onBack() {}, onSelectLocation: (location) => selected.push(location), isFocused: true };
+  const map = mountMap(props);
+  map.find('LocationMap').props.onSelectClusterLocations([seongsu]);
+  map.render();
+  assert.deepEqual(Array.from(map.find('LocationList').props.locations, (location) => location.id), ['mock-seongsu']);
+  assert.deepEqual(map.snaps, [2]);
+  map.find('LocationList').props.onSelectLocation(seongsu);
+  map.render();
+  map.render({ ...props, isFocused: false });
+  map.render(props);
+  assert.deepEqual(selected, [seongsu]);
+  assert.deepEqual(map.snaps, [2], '상세 진입·복귀에서 구성 목록의 높이를 바꾸지 않는다');
+  assert.equal(map.find('BranchSelection'), undefined);
+  assert.deepEqual(Array.from(map.find('LocationList').props.locations, (location) => location.id), ['mock-seongsu']);
+  descendants(map.find('LocationList').props.header).find((node) => node.type === 'Button').props.onPress();
+  map.render();
+  assert.equal(map.find('LocationList').props.locations.length, 2);
+});

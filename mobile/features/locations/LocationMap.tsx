@@ -6,6 +6,7 @@ type Props = {
   locations: readonly LocationPoint[];
   selectedLocationId?: string;
   onSelectLocation: (location: LocationPoint) => void;
+  onSelectClusterLocations?: (locations: readonly LocationPoint[]) => void;
 };
 
 export function LocationMap(props: Props) {
@@ -37,10 +38,10 @@ export function LocationMap(props: Props) {
 function MapUnavailable({ detail }: { detail: string }) {
   return (
     <View className="flex-1 items-center justify-center bg-canvas px-8">
-      <Text accessibilityRole="header" className="text-[18px] font-bold text-heading">
+      <Text accessibilityRole="header" className="text-size-18 font-bold text-heading">
         지도를 준비하고 있어요
       </Text>
-      <Text className="mt-2 text-center text-[14px] leading-6 text-muted">
+      <Text className="mt-2 text-center text-size-14 leading-6 text-muted">
         {__DEV__ ? detail : '현재 지도를 표시할 수 없습니다. 잠시 후 다시 확인해 주세요.'}
       </Text>
     </View>
