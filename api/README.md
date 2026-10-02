@@ -160,3 +160,9 @@ pnpm --filter @iambox/api prisma:validate
 Migration은 향후 테이블 구조가 바뀔 때 그 변경을 DB에 적용하는 이력 파일입니다.
 모바일 API 연결과 첫 데이터 모델은 별도 단계에서 진행합니다.
 
+
+## 모노레포 통합 확인 (2026-10-02, 6단계)
+
+`pnpm typecheck:api`와 `pnpm build:api`가 Prisma Client 생성 후 통과했습니다. 빌드된 연결 확인 CLI의 읽기 전용 `SELECT current_database()`는 `iambox`를 반환했고, API 3000과 웹 3001/검증용 3002를 함께 실행해 `GET /`의 `Hello World!`·200 응답을 확인했습니다. migration·테이블·업무 API는 추가하지 않았습니다.
+
+API는 현재 공통 packages를 소비하지 않습니다. 웹 확인 화면도 API·DB에 연결하지 않으며, 공통 LocationData는 실제 API 응답 계약이 아닙니다. 업무 모델·DTO·CORS와 클라이언트 환경변수는 실제 연동 단계에서 결정합니다. [6단계 결과](../docs/superpowers/plans/2026-10-02-monorepo-stage6.md)를 참고하세요.

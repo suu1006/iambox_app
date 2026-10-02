@@ -1,6 +1,6 @@
 # Mobile
 
-React Native + Expo + TypeScript 앱입니다. Expo SDK 57을 사용하며 홈·지점찾기·출입QR·이삿짐·마이 하단 탭이 있습니다.
+React Native + Expo + TypeScript 앱입니다. Expo SDK 57을 사용하며 홈·지점찾기·출입QR·택배·마이 하단 탭이 있습니다.
 지점찾기는 `@mj-studio/react-native-naver-map` 2.9.0을 사용합니다. 네이버 지도는 **Expo Go가 아닌 개발용 앱(Development Build)**에서 실행합니다.
 
 ## 처음 실행하기
@@ -74,9 +74,45 @@ pnpm dev:mobile --port 8082
 
 휴대폰과 컴퓨터를 같은 Wi-Fi에 연결하고 설치한 **iambox 개발용 앱**으로 접속합니다. 이미 8082 포트의 서버가 실행 중이면 기존 터미널에서 `Ctrl+C`로 종료한 뒤 다시 시작합니다. 캐시 초기화가 필요하면 `--clear`를 붙입니다.
 
+iOS 시뮬레이터에 `--localhost`로 연결할 때 서버가 `::1`에서만 대기하면,
+개발용 앱이 사용하는 `127.0.0.1`로 접속하지 못할 수 있습니다. 이 경우 기존
+서버를 종료하고 아래처럼 IPv4 우선 DNS 순서와 Xcode 경로를 지정합니다.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer NODE_OPTIONS=--dns-result-order=ipv4first pnpm --filter @iambox/mobile start --localhost --port 8081
+curl http://127.0.0.1:8081/status
+```
+
+상태 응답은 `packager-status:running`이어야 합니다. 실행 명령에 지정한 환경변수는
+해당 서버 프로세스에만 적용되며 시스템 Xcode 설정은 변경하지 않습니다.
+
 Client ID·앱 식별자·네이티브 의존성을 변경하면 **prebuild와 앱 빌드·설치를 다시 수행**해야 합니다. Metro 새로고침만으로 네이티브 인증 설정은 바뀌지 않습니다. JS 화면 코드만 변경한 경우에는 보통 다시 빌드하지 않습니다.
 
-홈 등 다른 화면만 Expo Go로 확인하려면 `pnpm --filter @iambox/mobile start:go --port 8082`를 실행할 수 있습니다. 이 경우 지점찾기에는 개발용 앱 안내가 표시되며 지도 SDK는 로드하지 않습니다.
+### 5. Expo Go로 실행
+
+네이티브 앱을 빌드하지 않고 화면을 확인하려면 프로젝트 루트에서 실행합니다.
+
+```bash
+pnpm dev:mobile:go --port 8082
+```
+
+휴대폰의 Expo Go에서 터미널의 QR 코드를 스캔합니다. 컴퓨터와 휴대폰은 같은
+Wi-Fi에 연결해야 하며, 프로젝트의 Expo SDK 57과 호환되는 Expo Go가 필요합니다.
+`dev:mobile`은 개발용 앱, `dev:mobile:go`는 Expo Go를 명시적으로 대상으로 합니다.
+
+홈·마이·출입QR 안내와 지점 바텀 시트 목록·상세 화면을 확인할 수 있습니다.
+네이버 지도 SDK는 Expo Go에 포함되어 있지 않으므로 지도 영역에는 개발용 앱
+안내를 표시하고 SDK를 로드하지 않습니다. 실제 지도는 `pnpm dev:mobile`로
+개발용 앱을 연결해 확인합니다.
+
+iOS 시뮬레이터에서는 설치와 실행을 Expo CLI에 맡길 수 있습니다.
+
+```bash
+DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer NODE_OPTIONS=--dns-result-order=ipv4first pnpm dev:mobile:go --localhost --port 8082 --ios
+```
+
+Expo Go는 개발용 앱과 별도로 설치됩니다. 동시에 실행하려면 서로 다른 포트를
+사용합니다(예: 개발용 앱 8081, Expo Go 8082).
 
 ## 지점찾기 1단계 검토
 
@@ -112,13 +148,15 @@ pnpm typecheck:mobile
 ## 파일 역할
 
 - `index.ts`, `App.tsx`: 앱 등록, 하단 탭 상태와 화면 배치.
-- `theme/colors.json`: primary 기준 색상 토큰. 사용 기준은 [Design System](../docs/DESIGN_SYSTEM.md)을 따릅니다.
-- `components/ui/`: 여러 화면이 쓰는 Button, Badge, Decorative, InfoDialog·DialogCard·useInfoDialog.
+- `@iambox/design-tokens/colors.json`: primary 기준 공통 색상 토큰. 원본은 `../packages/design-tokens/src/colors.json`이며 TS·Tailwind가 함께 읽습니다([Design System](../docs/DESIGN_SYSTEM.md)).
+- `components/ui/`: Button·Badge는 `@iambox/ui/native` 재수출, Decorative·InfoDialog·DialogCard·useInfoDialog는 모바일 전용 구현. Tailwind가 공유 UI의 shared/native 경로도 탐색합니다.
 - `components/layout/`: ScreenContainer, AppHeader, BottomTabBar, PlaceholderContent 화면 뼈대.
 - `features/home/HomeContent.tsx`, `EventBanner.tsx`: 홈 소개·서비스 카드·바로가기·이벤트 배너·후기.
 - `features/access/AccessContent.tsx`: 출입QR 내 공간 카드·방문 안내·문의.
 - `features/access/QrAccessModal.tsx`: QR 안내창과 Android 오버레이·뒤로가기 처리.
-- `features/access/useQrBrightness.ts`, `brightnessSession.ts`: 네이티브 밝기 연결, 앱 상태에 따른 적용·복원과 비동기 순서 관리.
+- `features/access/useQrBrightness.ts`, `utils/brightnessSession.ts`: 네이티브 밝기 연결, 앱 상태에 따른 적용·복원과 비동기 순서 관리.
+- `types/location.ts`: 공통 `LocationData`에 모바일 `photoSource`를 더하는 지점 타입.
+- `utils/`: 공통 가격·검색 함수 재수출, 모바일 바텀 시트 높이 계산과 QR 밝기 세션. 실제 가격·검색 구현은 `@iambox/utils`에 있습니다.
 - `tests/brightnessSession.test.cjs`: 밝기 복원·앱 전환·빠른 닫기·실패 처리 테스트.
 - `features/locations/LocationsContent.tsx`: 헤더·예시 데이터 안내·지도 배치.
 - `features/locations/LocationMap.tsx`: 실행 환경과 설정 확인, 준비 안내, 네이버 지도 지연 로드.
@@ -129,6 +167,22 @@ pnpm typecheck:mobile
 - `package.json`: 의존성과 개발용 앱 실행·타입 검사 명령.
 
 ## 검증 기록
+
+### Button·Badge 공유 (2026-10-02, 4단계)
+
+- 기존 Button·Badge 경로는 native를 재수출하며 화면 호출부는 그대로입니다. props·이벤트·아이콘·접근성과 기존 클래스 문자열을 유지했습니다.
+- `pnpm typecheck:shared`(UI web/native 포함), `pnpm typecheck:mobile`, utils 2개·UI 12개·모바일 31개 테스트: 통과.
+- 실제 Tailwind 출력에서 기존 두 컴포넌트 utility 34개가 동일하게 생성되며 iOS·Android `expo export`가 통과했습니다.
+- **미검증:** 기기·시뮬레이터 화면, 터치·지도·밝기·스크린리더 재실행. 웹 브라우저 확인은 5단계입니다.
+- 자세한 변경 링크와 결과는 [4단계 기록](../docs/superpowers/plans/2026-10-02-shared-ui-stage4.md)을 참고하세요.
+
+### 공통 데이터·함수·토큰 연결 (2026-10-02, 3단계)
+
+- `pnpm typecheck:shared`, `pnpm typecheck:mobile`, 공통 테스트 2개와 기존 모바일 테스트 31개: 통과.
+- 색상 JSON은 이동 전과 바이트 단위로 동일하며 화면 import와 Tailwind가 같은 공통 파일을 사용합니다.
+- 명시적 `.ts` 소스 export를 소비하도록 `tsconfig.json`에 `allowImportingTsExtensions`를 추가했습니다. Metro는 기존 Expo monorepo 자동 설정을 유지했습니다.
+- iOS·Android `expo export`: 통과. 기기 화면 실행과 실제 지도·밝기 동작은 이번 단계에서 재검증하지 않았습니다.
+- 공통 사용법과 단계 기록은 [packages/README.md](../packages/README.md), [3단계 기록](../docs/superpowers/plans/2026-10-02-shared-packages-stage3.md)을 참고하세요.
 
 2026-09-30 홈·출입QR 화면과 디자인 시스템 정리 후:
 
@@ -168,3 +222,19 @@ pnpm --filter @iambox/mobile exec expo export --platform ios --platform android
 번들 생성 성공은 네이티브 SDK 빌드·기기 동작 성공을 뜻하지 않습니다. 실제 기기 화면을 검토한 뒤 2단계 행정구역 개수 표시로 진행합니다.
 
 [React Native Naver Map Expo 설정](https://rnnavermap.mjstudio.net/docs/installation/expo)
+
+### 앱·웹 공유 구조 통합 확인 (2026-10-02, 6단계)
+
+- 공통·모바일·웹·API 타입 검사, 공통 14개와 모바일 31개 테스트, API/웹 빌드, iOS·Android export: 통과.
+- 설치된 iPhone 18 Pro / iOS 27 개발용 앱을 현재 Metro에 연결했다. 홈 로딩, 출입QR의 공통 primary/link 버튼·solid 배지, 이용 내역 안내 모달 열기, 지점 목록의 compact 배지·가격 표시와 지도 타일을 확인했다.
+- **미검증:** Android 기기 화면, 실기기 밝기·복원, 지도 상세 왕복·검색/필터 전체 조작, 스크린리더·큰 글자·좁은 네이티브 화면. export는 네이티브 앱 컴파일이나 기기 동작 검증을 대체하지 않는다.
+
+이번 환경에서 `--localhost`는 Metro를 IPv6 `::1`에 바인딩했지만 번들 URL은 `127.0.0.1`로 생성돼 첫 로딩이 실패했다. 아래 실행 옵션으로 IPv4 우선 해석을 적용하니 현재 코드가 로딩됐다. 시스템 DNS 설정이나 앱 코드는 변경하지 않았다.
+
+```bash
+NODE_OPTIONS=--dns-result-order=ipv4first pnpm dev:mobile --port 8082 --localhost
+```
+
+Xcode가 설치돼 있으나 `xcode-select -p`가 CommandLineTools를 가리키면 필요한 명령에만 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`를 지정할 수 있다. 전역 선택은 이번 작업에서 변경하지 않았다.
+
+[6단계 통합 결과](../docs/superpowers/plans/2026-10-02-monorepo-stage6.md)를 참고한다.

@@ -92,3 +92,9 @@ curl -i http://localhost:3000/
 - 목록 조회라면 실제 필요한 필터·정렬·페이지네이션
 
 Controller·DTO·Service가 문서와 다르면 실제 코드를 확인해 차이를 해결한다. 미구현 계약을 기반으로 모바일 호출을 먼저 작성하지 않는다.
+
+## 웹·공통 패키지 경계 (2026-10-02)
+
+Next.js 기본 웹은 공통 코드 확인용이며 현재 API를 호출하지 않는다. `packages/contracts`의 LocationData는 화면 표시용 데이터이고 위 예정 API의 응답 DTO가 아니다. API 자체도 공통 패키지 의존성을 선언하지 않는다. 실제 연동 시 요청/응답 계약과 CORS·클라이언트 base URL·인증을 함께 정한다.
+
+6단계에서 기존 API 타입·빌드·읽기 전용 DB 연결과 GET / 200·Hello World!를 확인했다. 새로운 엔드포인트나 업무 계약은 추가하지 않았다. [통합 검증 기록](superpowers/plans/2026-10-02-monorepo-stage6.md)을 따른다.
