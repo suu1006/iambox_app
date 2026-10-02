@@ -1,0 +1,13 @@
+.iambox-ui-button {
+  cursor: pointer;
+}
+.iambox-ui-button:disabled {
+  cursor: default;
+}
+.iambox-ui-button:active:not(:disabled) {
+  opacity: var(--iambox-pressed-opacity);
+}
+.iambox-ui-button:focus-visible {
+  outline: 2px solid var(--iambox-focus-color);
+  outline-offset: 3px;
+}

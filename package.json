@@ -8,8 +8,8 @@
     "dev:api": "pnpm --filter @iambox/api dev",
     "build:api": "pnpm --filter @iambox/api build",
     "typecheck:api": "pnpm --filter @iambox/api typecheck",
-    "typecheck:shared": "pnpm --filter @iambox/contracts --filter @iambox/utils --filter @iambox/design-tokens typecheck",
-    "test:shared": "pnpm --filter @iambox/utils test"
+    "typecheck:shared": "pnpm --filter @iambox/contracts --filter @iambox/utils --filter @iambox/design-tokens --filter @iambox/ui typecheck",
+    "test:shared": "pnpm --filter @iambox/utils --filter @iambox/ui test"
   },
   "devDependencies": {
     "eslint": "^10.11.0"

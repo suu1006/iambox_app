@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2023"
+    ],
+    "types": [
+      "react",
+      "nativewind/types"
+    ]
+  },
+  "include": [
+    "src/shared/**/*.ts",
+    "src/native/**/*.ts",
+    "src/native/**/*.tsx",
+    "tests/native.types.ts"
+  ]
+}

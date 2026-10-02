@@ -224,6 +224,9 @@ importers:
       '@iambox/design-tokens':
         specifier: workspace:*
         version: link:../packages/design-tokens
+      '@iambox/ui':
+        specifier: workspace:*
+        version: link:../packages/ui
       '@iambox/utils':
         specifier: workspace:*
         version: link:../packages/utils
@@ -300,6 +303,31 @@ importers:
 
   packages/design-tokens:
     devDependencies:
+      typescript:
+        specifier: ~6.0.3
+        version: 6.0.3
+
+  packages/ui:
+    dependencies:
+      '@iambox/design-tokens':
+        specifier: workspace:*
+        version: link:../design-tokens
+      react:
+        specifier: ^19.2.3
+        version: 19.2.3
+    devDependencies:
+      '@types/react':
+        specifier: ~19.2.2
+        version: 19.2.18
+      nativewind:
+        specifier: 4.2.7
+        version: 4.2.7(3124d93bc57195b55e04f38f6a267ed6)
+      react-native:
+        specifier: 0.86.3
+        version: 0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
+      react-native-svg:
+        specifier: 15.15.4
+        version: 15.15.4(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
