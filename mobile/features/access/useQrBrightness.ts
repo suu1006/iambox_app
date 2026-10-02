@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { AppState, Platform } from 'react-native';
 import { requireOptionalNativeModule } from 'expo';
-import { bindBrightnessToAppState, createBrightnessSession } from './brightnessSession';
+import { bindBrightnessToAppState, createBrightnessSession } from '../../utils/brightnessSession';
 
 // 화면 재마운트 사이에도 같은 큐를 사용해 이전 복원과 새 적용의 순서를 보장한다.
 let session: ReturnType<typeof createBrightnessSession> | undefined;

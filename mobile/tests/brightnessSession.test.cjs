@@ -1,6 +1,6 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const { createBrightnessSession, bindBrightnessToAppState } = require('../features/access/brightnessSession.ts');
+const { createBrightnessSession, bindBrightnessToAppState } = require('../utils/brightnessSession.ts');
 
 // 기기 API만 대체한다. 테스트 대상은 실제 세션의 비동기 순서와 복원 결과다.
 function device({ brightness = 0.35, system = false } = {}) {
