@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { Pressable, Text, type PressableProps } from 'react-native';
 import type { SvgProps } from 'react-native-svg';
-import colors from '../../theme/colors.json';
+import colors from '@iambox/design-tokens/colors.json';
 
 type Variant = 'primary' | 'link';
 

@@ -1,6 +1,6 @@
 import { NaverMapMarkerOverlay, NaverMapView, type Region } from '@mj-studio/react-native-naver-map';
 import { Alert, StyleSheet } from 'react-native';
-import colors from '../../theme/colors.json';
+import colors from '@iambox/design-tokens/colors.json';
 import type { LocationPoint } from './types';
 
 type Props = { locations: readonly LocationPoint[] };

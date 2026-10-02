@@ -12,7 +12,7 @@ import HomeNotice from '../../assets/home-notice.svg';
 import ChevronRight from '../../assets/chevron-right.svg';
 import { ScreenContainer } from '../../components/layout';
 import { Decorative, InfoDialog, useInfoDialog, type DialogContent } from '../../components/ui';
-import colors from '../../theme/colors.json';
+import colors from '@iambox/design-tokens/colors.json';
 
 const services = [
   { title: '택배요청', description: '간편하게 접수하세요', Icon: HomeDelivery },

@@ -1,15 +1,17 @@
 {
   "primary": {
-    "DEFAULT": "#7B2DDA",
+    "DEFAULT": "#844CCF",
     "50": "#F6F2FD",
     "100": "#F0E9FA",
-    "200": "#E5D5F7"
+    "200": "#E5D5F7",
+    "300": "#BB91E8"
   },
   "onPrimary": "#FFFFFF",
   "onPrimaryMuted": "#EEE0FF",
   "heading": "#101828",
   "muted": "#667085",
   "inactive": "#818598",
+  "subtle": "#9297A5",
   "surface": "#FFFFFF",
   "canvas": "#F8FAFC",
   "divider": "#E8E9EF",

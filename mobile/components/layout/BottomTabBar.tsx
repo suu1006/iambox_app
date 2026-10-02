@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { tabs, type TabKey } from '../../navigation/tabs';
-import colors from '../../theme/colors.json';
+import colors from '@iambox/design-tokens/colors.json';
 
 type Props = { activeTab: TabKey; onTabChange: (tab: TabKey) => void };
 

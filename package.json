@@ -7,7 +7,9 @@
     "typecheck:mobile": "pnpm --filter @iambox/mobile typecheck",
     "dev:api": "pnpm --filter @iambox/api dev",
     "build:api": "pnpm --filter @iambox/api build",
-    "typecheck:api": "pnpm --filter @iambox/api typecheck"
+    "typecheck:api": "pnpm --filter @iambox/api typecheck",
+    "typecheck:shared": "pnpm --filter @iambox/contracts --filter @iambox/utils --filter @iambox/design-tokens typecheck",
+    "test:shared": "pnpm --filter @iambox/utils test"
   },
   "devDependencies": {
     "eslint": "^10.11.0"

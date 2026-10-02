@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "dependencies": {
+    "@iambox/contracts": "workspace:*",
+    "@iambox/design-tokens": "workspace:*",
+    "@iambox/utils": "workspace:*",
     "@mj-studio/react-native-naver-map": "2.9.0",
     "expo": "~57.0.25",
     "expo-brightness": "~57.0.2",
