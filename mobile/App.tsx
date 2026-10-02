@@ -8,6 +8,7 @@ import { AppHeader, BottomTabBar, PlaceholderContent } from './components/layout
 import { HomeContent } from './features/home/HomeContent';
 import { AccessContent } from './features/access/AccessContent';
 import { LocationsContent } from './features/locations/LocationsContent';
+import { MyContent } from './features/my/MyContent';
 import { QrAccessModal } from './features/access/QrAccessModal';
 import { tabs, type TabKey } from './navigation/tabs';
 
@@ -42,6 +43,8 @@ export default function App() {
               <AccessContent onOpenQr={() => setQrVisible(true)} />
             ) : activeTab === 'locations' ? (
               <LocationsContent onBack={() => selectTab(previousTab)} />
+            ) : activeTab === 'my' ? (
+              <MyContent onMyBoxPress={() => selectTab('access')} />
             ) : (
               <>
                 <AppHeader title={selectedTab.label} />
