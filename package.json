@@ -4,12 +4,16 @@
   "packageManager": "pnpm@12.6.0",
   "scripts": {
     "dev:mobile": "pnpm --filter @iambox/mobile start",
+    "dev:mobile:go": "pnpm --filter @iambox/mobile start:go",
     "typecheck:mobile": "pnpm --filter @iambox/mobile typecheck",
     "dev:api": "pnpm --filter @iambox/api dev",
     "build:api": "pnpm --filter @iambox/api build",
     "typecheck:api": "pnpm --filter @iambox/api typecheck",
     "typecheck:shared": "pnpm --filter @iambox/contracts --filter @iambox/utils --filter @iambox/design-tokens --filter @iambox/ui typecheck",
-    "test:shared": "pnpm --filter @iambox/utils --filter @iambox/ui test"
+    "test:shared": "pnpm --filter @iambox/utils --filter @iambox/ui test",
+    "dev:web": "pnpm --filter @iambox/web dev",
+    "build:web": "pnpm --filter @iambox/web build",
+    "typecheck:web": "pnpm --filter @iambox/web typecheck"
   },
   "devDependencies": {
     "eslint": "^10.11.0"

@@ -1,0 +1,8 @@
+import { fileURLToPath } from 'node:url';
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: ['@iambox/contracts', '@iambox/utils', '@iambox/design-tokens', '@iambox/ui'],
+  turbopack: { root: fileURLToPath(new URL('..', import.meta.url)) },
+};
+export default nextConfig;

@@ -8,3 +8,8 @@ dist/
 mobile/android/
 mobile/ios/
 api/src/generated/prisma/
+
+web/.next/
+web/out/
+.playwright-cli/
+web/next-env.d.ts

@@ -1,6 +1,7 @@
 packages:
   - mobile
   - api
+  - web
   - packages/*
 allowBuilds:
   '@prisma/engines': true
