@@ -1,10 +1,14 @@
 import Constants, { ExecutionEnvironment } from 'expo-constants';
 import { Platform, Text, TurboModuleRegistry, View } from 'react-native';
-import type { LocationPoint } from './types';
+import type { LocationPoint } from '../../types/location';
 
-type Props = { locations: readonly LocationPoint[] };
+type Props = {
+  locations: readonly LocationPoint[];
+  selectedLocationId?: string;
+  onSelectLocation: (location: LocationPoint) => void;
+};
 
-export function LocationMap({ locations }: Props) {
+export function LocationMap(props: Props) {
   if (
     Platform.OS === 'web' ||
     Constants.executionEnvironment === ExecutionEnvironment.StoreClient ||
@@ -27,7 +31,7 @@ export function LocationMap({ locations }: Props) {
 
   // The SDK enforces its native module at import time, so load it only after these checks.
   const { NaverLocationMap } = require('./NaverLocationMap') as typeof import('./NaverLocationMap');
-  return <NaverLocationMap locations={locations} />;
+  return <NaverLocationMap {...props} />;
 }
 
 function MapUnavailable({ detail }: { detail: string }) {

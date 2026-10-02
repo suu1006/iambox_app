@@ -1,37 +1,41 @@
-import { NaverMapMarkerOverlay, NaverMapView, type Region } from '@mj-studio/react-native-naver-map';
-import { Alert, StyleSheet } from 'react-native';
-import colors from '@iambox/design-tokens/colors.json';
-import type { LocationPoint } from './types';
+import { NaverMapView } from '@mj-studio/react-native-naver-map';
+import { StyleSheet } from 'react-native';
+import { LocationMarker } from './LocationMarker';
+import type { LocationPoint } from '../../types/location';
 
-type Props = { locations: readonly LocationPoint[] };
-
-// Naver's region starts at the southwest corner, unlike react-native-maps' center.
-const initialRegion: Region = {
-  latitude: 37.4674,
-  longitude: 126.96,
-  latitudeDelta: 0.11,
-  longitudeDelta: 0.14,
+type Props = {
+  locations: readonly LocationPoint[];
+  selectedLocationId?: string;
+  onSelectLocation: (location: LocationPoint) => void;
 };
 
-export function NaverLocationMap({ locations }: Props) {
+// Start near Gangnam/Seocho so their price bubbles do not overlap.
+// Seongsu remains available by moving the map north.
+const initialCamera = {
+  latitude: 37.4965,
+  longitude: 127.0175,
+  zoom: 13,
+};
+
+export function NaverLocationMap({ locations, selectedLocationId, onSelectLocation }: Props) {
   return (
     <NaverMapView
       accessibilityLabel="네이버 예시 지점 지도"
-      initialRegion={initialRegion}
+      initialCamera={initialCamera}
       mapType="Basic"
       locale="ko"
       isShowLocationButton={false}
       isShowZoomControls={false}
+      logoAlign="TopLeft"
+      logoMargin={{ left: 12, top: 12 }}
       style={styles.map}
     >
       {locations.map((location) => (
-        <NaverMapMarkerOverlay
+        <LocationMarker
           key={location.id}
-          latitude={location.latitude}
-          longitude={location.longitude}
-          image={{ symbol: 'blue' }}
-          caption={{ text: location.name, color: colors.heading, haloColor: colors.surface }}
-          onTap={() => Alert.alert(location.name, '지도 표시 확인용 예시 지점입니다.')}
+          location={location}
+          selected={selectedLocationId === location.id}
+          onSelect={onSelectLocation}
         />
       ))}
     </NaverMapView>

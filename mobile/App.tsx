@@ -13,9 +13,13 @@ import { tabs, type TabKey } from './navigation/tabs';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<TabKey>('home');
+  const [previousTab, setPreviousTab] = useState<TabKey>('home');
   const [qrVisible, setQrVisible] = useState(false);
   const closeQr = useCallback(() => setQrVisible(false), []);
   const selectTab = (tab: TabKey) => {
+    if (tab === 'locations' && activeTab !== 'locations') {
+      setPreviousTab(activeTab);
+    }
     setQrVisible(false);
     setActiveTab(tab);
   };
@@ -37,7 +41,7 @@ export default function App() {
             ) : activeTab === 'access' ? (
               <AccessContent onOpenQr={() => setQrVisible(true)} />
             ) : activeTab === 'locations' ? (
-              <LocationsContent />
+              <LocationsContent onBack={() => selectTab(previousTab)} />
             ) : (
               <>
                 <AppHeader title={selectedTab.label} />
