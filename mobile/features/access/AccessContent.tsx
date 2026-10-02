@@ -1,8 +1,9 @@
-import { Image, Pressable, Text, useWindowDimensions, View } from 'react-native';
+import { Pressable, Text, useWindowDimensions, View } from 'react-native';
 import ArrowRight from '../../assets/arrow-right.svg';
 import ChevronRight from '../../assets/chevron-right.svg';
 import Guide from '../../assets/guide.svg';
 import Headset from '../../assets/headset.svg';
+import StorageIllustration from '../../assets/imbox_storage_A-024.svg';
 import Location from '../../assets/location.svg';
 import QrScan from '../../assets/qr-scan.svg';
 import { AppHeader, ScreenContainer } from '../../components/layout';
@@ -10,8 +11,6 @@ import { Badge, Button, Decorative, InfoDialog, useInfoDialog } from '../../comp
 import { mockAccessDetails, mockStorageUsage } from '../../mocks/access';
 import colors from '@iambox/design-tokens/colors.json';
 
-// 제공 SVG는 같은 PNG를 base64로 두 번 담은 3.5MB 파일이라 JS 번들에 넣지 않도록 PNG로 추출해 사용한다.
-const storageIllustration = require('../../assets/imbox_storage_A-024.png');
 // 폭 360px 미만(320px에서 확인)에서는 보관함 그림이 카드 오른쪽에서 잘리지 않도록 크기와 위치를 줄인다.
 const compactIllustration = { right: -32, width: 174, height: 130 };
 
@@ -38,7 +37,7 @@ export function AccessContent({ onOpenQr }: Props) {
               className={largeText ? 'h-[140px] w-full' : 'absolute -right-9 -top-2 h-[142px] w-[213px]'}
               style={!largeText && compact ? compactIllustration : undefined}
             >
-              <Image source={storageIllustration} resizeMode="contain" className="h-full w-full" />
+              <StorageIllustration width="100%" height="100%" preserveAspectRatio="xMidYMid meet" accessible={false} />
             </Decorative>
             <Badge label={usage.status} />
             <Text accessibilityRole="header" className={`mt-3 font-bold tracking-tight text-heading ${compact ? 'text-[20px] leading-7' : 'text-[24px] leading-8'}`}>
@@ -72,7 +71,7 @@ export function AccessContent({ onOpenQr }: Props) {
         </View>
 
         <View className="mt-6">
-          <Text accessibilityRole="header" className="px-1 text-[20px] font-bold leading-7 tracking-tight text-heading">방문 전 확인하세요</Text>
+          <Text accessibilityRole="header" className="px-1 text-[20px] font-bold leading-7 tracking-tight text-heading">방문 시 확인하세요</Text>
           <View>
             {visitLinks.map(({ key, label, Icon }, index) => (
               <Pressable

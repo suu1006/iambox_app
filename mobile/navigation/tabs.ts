@@ -8,7 +8,7 @@ export const tabs = [
   { key: 'home', label: '홈', Icon: HomeIcon },
   { key: 'locations', label: '지점찾기', Icon: LocationIcon },
   { key: 'access', label: '출입QR', Icon: EntryQrIcon },
-  { key: 'items', label: '이삿짐', Icon: MovingBoxIcon },
+  { key: 'items', label: '택배', Icon: MovingBoxIcon },
   { key: 'my', label: '마이', Icon: MyIcon },
 ] as const;
 

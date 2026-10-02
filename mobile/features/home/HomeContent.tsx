@@ -1,28 +1,26 @@
-import { Pressable, Text, useWindowDimensions, View } from 'react-native';
+import { Image, Pressable, Text, useWindowDimensions, View } from 'react-native';
 import { EventBanner } from './EventBanner';
 import StorageBoxes from '../../assets/01_storage_boxes.svg';
 import StartupStore from '../../assets/04_startup_store.svg';
-import HomeStorage from '../../assets/home-storage.svg';
 import HomeDelivery from '../../assets/home-delivery.svg';
-import HomeCare from '../../assets/home-care.svg';
 import HomeStartup from '../../assets/home-startup.svg';
 import HomeLocation from '../../assets/home-location.svg';
 import HomeOnsite from '../../assets/home-onsite.svg';
 import HomeNotice from '../../assets/home-notice.svg';
 import ChevronRight from '../../assets/chevron-right.svg';
-import { ScreenContainer } from '../../components/layout';
+import { BrandLogo, ScreenContainer } from '../../components/layout';
 import { Decorative, InfoDialog, useInfoDialog, type DialogContent } from '../../components/ui';
 import colors from '@iambox/design-tokens/colors.json';
 
 const services = [
   { title: '택배요청', description: '간편하게 접수하세요', Icon: HomeDelivery },
-  { title: '케어서비스', description: '소중한 물품을 위한 케어', Icon: HomeCare },
+  { title: '사전방문', description: '방문 전에 둘러보세요', image: require('../../assets/home-pre-visit.png') },
 ];
 
 const shortcuts = [
   { title: '창업문의', Icon: HomeStartup },
   { title: '지점 찾기', Icon: HomeLocation },
-  { title: '출장서비스', Icon: HomeOnsite },
+  { title: 'AI 견적', Icon: HomeOnsite },
   { title: '공지사항', Icon: HomeNotice },
 ];
 
@@ -41,7 +39,7 @@ export function HomeContent({ onLocationsPress }: Props) {
     <>
       <ScreenContainer>
         <View className="relative overflow-hidden pb-5 pt-5">
-          <Text className="text-[26px] font-extrabold tracking-tight text-primary">iambox</Text>
+          <BrandLogo />
           <View className="mt-6 flex-row items-center">
             <Text accessibilityRole="header" className="flex-1 text-[26px] font-extrabold leading-[36px] tracking-tight text-heading">
               {'짐 걱정은 덜고,\n'}
@@ -67,13 +65,13 @@ export function HomeContent({ onLocationsPress }: Props) {
               </View>
               <Text className="mt-2 text-[13px] leading-5 text-onPrimaryMuted">{compact ? '소중한 짐을\n안전하게\n보관하세요' : '소중한 짐을\n안전하게 보관하세요'}</Text>
               <Decorative className="mt-6 min-h-[126px] flex-1 justify-end">
-                <HomeStorage width="100%" height={126} />
+                <Image source={require('../../assets/home-storage.png')} resizeMode="contain" className="h-[126px] w-full" />
               </Decorative>
             </Pressable>
           </View>
 
           <View className="min-w-0 flex-1 gap-2.5">
-            {services.map(({ title, description, Icon }) => (
+            {services.map(({ title, description, Icon, image }) => (
               <Pressable
                 key={title}
                 accessibilityRole="button"
@@ -85,9 +83,9 @@ export function HomeContent({ onLocationsPress }: Props) {
                   <Text className="flex-1 text-[17px] font-bold leading-6 tracking-tight text-heading">{title}</Text>
                   <ChevronRight width={17} height={17} color={colors.inactive} accessible={false} />
                 </View>
-                <Text className="mt-1 text-[12px] leading-[18px] tracking-tight text-muted">{compact && title === '케어서비스' ? '소중한 물품을\n위한 케어' : description}</Text>
+                <Text className="mt-1 text-[12px] leading-[18px] tracking-tight text-muted">{compact && title === '사전방문' ? '방문 전에\n둘러보세요' : description}</Text>
                 <Decorative className="mt-1 h-[62px] w-full max-w-[114px] self-end">
-                  <Icon width="100%" height="100%" />
+                  {Icon ? <Icon width="100%" height="100%" /> : <Image source={image} resizeMode="contain" className="h-full w-full" />}
                 </Decorative>
               </Pressable>
             ))}
