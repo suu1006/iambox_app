@@ -6,7 +6,9 @@
 | --- | --- | --- |
 | `@iambox/contracts` | `LocationData` 타입 | 없음 |
 | `@iambox/utils` | `formatLocationPrice`, `filterLocations` | `@iambox/contracts` 타입 |
-| `@iambox/design-tokens/colors.json` | 색상 JSON 원본 | 없음 |
+| `@iambox/design-tokens` | 글자 크기·줄 간격·굵기·자간·타이포그래피 조합·간격·반경·네이티브 그림자·웹 폰트 목록 | 없음 |
+| `@iambox/design-tokens/tailwind` | 색상·타이포그래피·간격·반경 Tailwind 테마 어댑터 | 없음 |
+| `@iambox/design-tokens/*.json` | colors·typography·spacing·radii·shadows JSON 원본 | 없음 |
 | `@iambox/ui/native`, `@iambox/ui/web` | Button·Badge와 플랫폼별 props 타입 | `@iambox/design-tokens` |
 | `@iambox/ui/web.css` | 웹 버튼 pressed/focus 상태 CSS | 없음 |
 
@@ -18,7 +20,7 @@
 - 모바일이 contracts·utils·design-tokens·ui/native를 소비한다. API는 아직 공통 패키지를 소비하지 않는다.
 - `LocationData`는 지점 표시 데이터이며 확정된 API 응답 계약이 아니다. 모바일 이미지 타입은 모바일의 `LocationPoint`에만 추가한다.
 - 모바일의 가격·검색 유틸리티 파일은 utils를 재수출한다. 실제 함수 구현은 공통 패키지에만 있다.
-- 색상의 단일 원본은 `design-tokens/src/colors.json`이다. TS import와 Tailwind require가 같은 JSON subpath를 사용한다. 색상 값은 이동 전 그대로다.
+- 색상의 단일 원본은 `design-tokens/src/colors.json`이다. TS import와 Tailwind 어댑터가 같은 JSON 원본을 사용한다. 색상 값은 이동 전 그대로다. 타이포그래피·간격·반경·그림자도 JSON 원본으로 관리하며 `index.cjs`가 별칭을 해석한다. 루트 import는 수치/스타일을, Tailwind 어댑터는 단위를 갖춘 테마를 제공한다.
 - 네 패키지에 실제 source exports와 typecheck를 연결했다. UI는 shared 규칙과 native/web 진입점을 제공하고 모바일은 기존 Button·Badge 경로에서 native를 재수출한다.
 - Next.js `web/`은 네 공통 패키지의 의존성·변환 설정과 실행·빌드·타입 검사 명령을 제공한다. 사용자 요청으로 예시 화면·데이터를 제거해 홈은 비어 있다. layout은 색상 토큰·공통 UI CSS를 읽고, contracts/utils/UI 렌더러는 후속 화면에서 사용할 수 있다. API·DB 없이 로컬 3001에서 동작한다.
 
@@ -30,7 +32,7 @@
 
 contracts·utils는 `.ts` 소스를 exports로 제공하며 앱 bundler가 변환한다. utils 내부 export에도 `.ts` 확장자를 사용하므로 공통 기반 설정과 모바일 tsconfig에 `allowImportingTsExtensions: true`를 설정한다. Next.js에도 이 옵션과 `transpilePackages`를 연결했다. 공통 패키지의 별도 JS 빌드 산출물은 만들지 않는다.
 
-utils의 Node 테스트는 기존 환경인 Node.js v22.23.3에서 `--experimental-strip-types`로 실제 package exports를 읽는다. UI 테스트는 TypeScript로 실제 TSX 진입점을 변환하며 Node가 실행할 수 없는 네이티브 host만 대체한다. 실제 브라우저·네이티브 기기 실행을 대체하는 검증은 아니다. 토큰은 JSON subpath로 제공해 TS와 CommonJS 설정에서 함께 사용한다.
+utils의 Node 테스트는 기존 환경인 Node.js v22.23.3에서 `--experimental-strip-types`로 실제 package exports를 읽는다. UI 테스트는 TypeScript로 실제 TSX 진입점을 변환하며 Node가 실행할 수 없는 네이티브 host만 대체한다. 실제 브라우저·네이티브 기기 실행을 대체하는 검증은 아니다. 토큰은 기존 JSON subpath와 공통 CommonJS 런타임/타입 선언을 제공해 TS와 Tailwind require에서 함께 사용한다. UI 토큰 테스트는 실제 Tailwind CSS 생성과 원본 변경 시 웹 Button까지 값이 전달되는지 검증한다. 실제 Tailwind CLI watch에서도 공통 JSON 수정 후 스타일이 다시 생성되는지 확인한다.
 
 네 패키지는 실제 typecheck를 실행한다. utils는 `tests/filterLocations.types.ts`도 검사해 소비자가 확장한 타입의 반환을 확인한다. UI의 플랫폼별 타입 fixture는 onPress/onClick 혼합을 거부하고 native의 disabled null·웹 HTML 속성을 확인한다.
 
@@ -40,12 +42,17 @@ utils의 Node 테스트는 기존 환경인 Node.js v22.23.3에서 `--experiment
 import type { LocationData } from '@iambox/contracts';
 import { filterLocations, formatLocationPrice } from '@iambox/utils';
 import colors from '@iambox/design-tokens/colors.json';
+import { spacing, radii, typography, nativeShadows } from '@iambox/design-tokens';
 
 const priceLabel = formatLocationPrice(39000); // 39,000원~
 const primaryColor = colors.primary.DEFAULT;
+const screenPadding = spacing.screen; // 24
+const cardRadius = radii.card; // 20
+const body = typography.body; // fontSize 16, lineHeight 24
+const sheetShadow = nativeShadows.sheet;
 ```
 
-Tailwind 등의 설정에서는 `require('@iambox/design-tokens/colors.json')`을 사용한다. `filterLocations<T extends LocationData>`는 원본 순서·객체 참조·확장 필드 타입을 보존한다.
+공개 Tailwind 어댑터는 `@iambox/design-tokens/tailwind`다. 모바일의 `theme.extend`는 `require('../packages/design-tokens/src/tailwind.cjs')`로 같은 어댑터를 읽는다. Tailwind 3의 watch는 상대 `require` 의존성만 추적하므로 이 경로를 유지해야 공통 JSON 변경도 반영된다. 설정·클래스 이름을 최초 전환할 때는 Metro를 `--clear`로 재시작하고 앱을 전체 Reload한다. 화면은 `text-body`, `px-screen`, `rounded-card` 등 완전한 클래스 문자열을 사용한다. `filterLocations<T extends LocationData>`는 원본 순서·객체 참조·확장 필드 타입을 보존한다.
 
 ## UI 사용법
 

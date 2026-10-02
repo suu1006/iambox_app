@@ -114,17 +114,34 @@ DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer NODE_OPTIONS=--dns-resu
 Expo Go는 개발용 앱과 별도로 설치됩니다. 동시에 실행하려면 서로 다른 포트를
 사용합니다(예: 개발용 앱 8081, Expo Go 8082).
 
-## 지점찾기 1단계 검토
+## 지점찾기 검토
 
-현재는 한국어 네이버 기본 지도(`Basic`)와 강남·서초·성수의 **예시 마커 3개**를 연결했습니다. 마커에는 예시 지점명을 표시하고, 누르면 예시 데이터 안내를 엽니다. 현재 위치 권한은 요청하지 않습니다. 행정구역 개수·가격·특가·특징·목록은 다음 단계입니다. 대화에서 보여준 가격 말풍선 목업은 아직 구현 결과가 아닙니다.
+현재는 한국어 네이버 기본 지도(`Basic`), 강남·서초·성수의 **예시 지점 3개**, 가격 말풍선·검색·사이즈 필터·목록·상세를 연결했습니다. 현재 위치 권한은 요청하지 않습니다. 300개 이상을 고려해 Supercluster의 현재 bbox(5% 버퍼)·정수 zoom 결과로 Cluster와 가격 마커를 함께 표시합니다. 카메라 이동 중 기존 결과를 유지하고 idle에서 새 마커를 150ms 페이드로 표시합니다. 마커·목록에서 지점을 선택하면 바로 상세로 이동합니다. 중간 요약 시트 없이 기존 시트 높이를 유지하며, 상세 복귀 시 선택·검색·필터·클러스터 구성 목록을 보존합니다. 실제 API·특가·특징은 후속 범위입니다.
 
 1. Client ID를 설정한 개발용 앱에서 지점찾기 탭을 엽니다.
 2. 서울 주변 지도와 예시 마커 3개, 각 지점명이 표시되는지 확인합니다.
-3. 마커 터치, 지도 확대·축소·이동을 확인합니다.
+3. 축소 시 개수 클러스터와 클릭 확대, 확대 시 가격 마커를 확인합니다. 마커·목록을 선택하면 중간 요약 없이 바로 상세에 이동하고, 뒤로가기로 기존 지도·목록·시트 상태에 복귀하는지 확인합니다.
 4. 홈과 출입QR 탭을 다녀온 뒤 지도·마커가 다시 표시되는지 확인합니다.
 5. iOS·Android 각각 확인한 기기·OS와 미확인 플랫폼을 구분해 기록합니다.
 
 지도 대신 준비 안내가 나오면 Expo Go로 열었는지, 네이버 SDK가 포함된 개발용 앱인지, Client ID를 입력하고 앱을 다시 빌드했는지 확인합니다. 지도 바탕이 비어 있다면 네트워크, Mobile Dynamic Map 활성화, 네이버에 등록된 앱 식별자와 인증 정보를 확인합니다.
+
+### 350개 가상 지점 검증
+
+PNG 생성·JS 캐시와 SDK 이미지 캐시를 제한한다. 상세 말풍선은 지도 SDK가 View를 캡처하는 대신 단일 SVG 렌더러에서 PNG로 생성한다. JS 파일 캐시와 각 플랫폼 SDK 캐시는 각각 128개로 제한한다. 설치 시 pnpm SDK 패치가 적용되므로 기존 개발용 앱도 네이티브 재빌드한다. SDK 업그레이드 시 패치 적용과 네이티브 동작을 다시 확인해야 한다.
+
+```sh
+pnpm install --frozen-lockfile
+pnpm --filter @iambox/mobile ios
+# 기존 Metro를 종료하거나 다른 포트를 지정한다.
+EXPO_PUBLIC_MAP_MARKER_STRESS=spread pnpm --filter @iambox/mobile exec expo start --dev-client --clear
+# 같은 명령에서 spread → dense로 바꾸면 한 곳에 밀집한 350개를 확인한다.
+pnpm --filter @iambox/mobile test
+# 별도 네이티브 C++ 캐시 검사(macOS/Linux C++ 컴파일러 필요)
+pnpm --filter @iambox/mobile test:native-marker-cache
+```
+
+`EXPO_PUBLIC_MAP_MARKER_STRESS`는 `__DEV__`에서만 적용되며 플래그 없는 개발 앱과 릴리스의 기본 mock은 3개다. 가상 지점 주소·요금에는 검증용 안내가 들어간다. 분산·밀집 각각 지도 이동·확대/축소·마커/목록 선택·상세 복귀·탭 왕복을 확인하고, 실기기에서 장시간 이동 시 FPS·메모리를 따로 측정한다. 128개는 이미지 캐시 항목의 제한이며 현재 표시 중인 오버레이·지도 타일을 포함한 전체 메모리 제한은 아니다.
 
 ## 출입 QR 화면 밝기
 
@@ -147,7 +164,8 @@ pnpm typecheck:mobile
 
 ## 파일 역할
 
-- `index.ts`, `App.tsx`: 앱 등록, 하단 탭 상태와 화면 배치.
+- `index.ts`, `App.tsx`: 앱 등록, NavigationContainer, 하단 탭 상태와 화면 배치.
+- `navigation/LocationsStack.tsx`: 지점 지도·상세 Native Stack, 직렬화 가능한 지점 ID 전달과 상세 뒤로가기.
 - `@iambox/design-tokens/colors.json`: primary 기준 공통 색상 토큰. 원본은 `../packages/design-tokens/src/colors.json`이며 TS·Tailwind가 함께 읽습니다([Design System](../docs/DESIGN_SYSTEM.md)).
 - `components/ui/`: Button·Badge는 `@iambox/ui/native` 재수출, Decorative·InfoDialog·DialogCard·useInfoDialog는 모바일 전용 구현. Tailwind가 공유 UI의 shared/native 경로도 탐색합니다.
 - `components/layout/`: ScreenContainer, AppHeader, BottomTabBar, PlaceholderContent 화면 뼈대.
@@ -158,10 +176,11 @@ pnpm typecheck:mobile
 - `types/location.ts`: 공통 `LocationData`에 모바일 `photoSource`를 더하는 지점 타입.
 - `utils/`: 공통 가격·검색 함수 재수출, 모바일 바텀 시트 높이 계산과 QR 밝기 세션. 실제 가격·검색 구현은 `@iambox/utils`에 있습니다.
 - `tests/brightnessSession.test.cjs`: 밝기 복원·앱 전환·빠른 닫기·실패 처리 테스트.
-- `features/locations/LocationsContent.tsx`: 헤더·예시 데이터 안내·지도 배치.
+- `features/locations/LocationsContent.tsx`: 고정 검색·필터·지도·시트 배치와 선택 강조. 지도에 포커스가 있을 때만 Android 뒤로가기를 처리한다.
 - `features/locations/LocationMap.tsx`: 실행 환경과 설정 확인, 준비 안내, 네이버 지도 지연 로드.
-- `features/locations/NaverLocationMap.tsx`: 네이버 지도와 기본 마커. 네이버의 `Region`은 중심점이 아닌 남서쪽 좌표를 기준으로 합니다.
-- `mocks/locations.ts`: 실제 운영 지점이 아닌 고정 예시 좌표 3개.
+- `features/locations/NaverLocationMap.tsx`: idle bbox·정수 zoom 클러스터와 선택/확대 카메라를 관리하는 네이버 지도. 네이버의 `Region`은 중심점이 아닌 남서쪽 좌표를 기준으로 합니다.
+- `features/locations/useBranchClusters.ts`, `utils/branchClusters.ts`: 필터 배열의 GeoJSON·인덱스·조회, 안정된 ID와 진입 fade.
+- `mocks/locations.ts`: 기본 예시 좌표 3개, 개발 플래그 사용 시 `locationMarkerStress.ts`의 가상 좌표 350개.
 - `app.json`: 앱 이름·아이콘 등 공통 Expo 설정.
 - `app.config.ts`, `.env.example`: 환경별 앱 식별자·네이버 인증·네이티브 빌드 플러그인 설정.
 - `package.json`: 의존성과 개발용 앱 실행·타입 검사 명령.
@@ -238,3 +257,37 @@ NODE_OPTIONS=--dns-result-order=ipv4first pnpm dev:mobile --port 8082 --localhos
 Xcode가 설치돼 있으나 `xcode-select -p`가 CommandLineTools를 가리키면 필요한 명령에만 `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`를 지정할 수 있다. 전역 선택은 이번 작업에서 변경하지 않았다.
 
 [6단계 통합 결과](../docs/superpowers/plans/2026-10-02-monorepo-stage6.md)를 참고한다.
+
+## Native Stack 지점찾기 (2026-10-02)
+
+- React Navigation `native ^7.5.0`·`native-stack ^7.20.0`과 Expo 57 호환 `react-native-screens ~4.26.2`를 추가했다. 지점 지도/목록에서 선택하면 `LocationDetail` 경로에 `locationId`만 전달한다. 기존 상세 헤더와 하단 탭을 유지한다.
+- iOS 가장자리 스와이프 뒤로가기를 활성화했다. `<` 버튼과 접근성 escape도 Stack의 `goBack`을 호출한다. 상세 뒤의 지도는 마운트 상태를 유지하고 비활성 상태에서는 터치·접근성·BackHandler를 제외한다. 다른 탭에 갔다 재진입하면 기존처럼 새 지도 화면에서 시작한다.
+- 의존성 설치 후 기존 개발 앱은 네이티브 화면 모듈이 없으므로 재빌드가 필요하다: `pnpm --filter @iambox/mobile ios` / `pnpm --filter @iambox/mobile android`. Expo Go에서 네이버 지도를 실행할 수 있다는 의미는 아니다.
+- 자동 검증: 모바일 타입 검사·전체 테스트 40개와 iOS/Android JS 번들 생성 통과. 새 테스트 7개는 지점 선택·포커스/뒤로가기·필터/시트/탭 순서·복귀 상태·지점 ID 전달/조회·잘못된 ID 안내를 검증한다. 네이티브 터치와 화면 전환 자체를 Node 테스트로 검증한 것은 아니다.
+- iOS 개발 앱 네이티브 빌드 통과(오류 0개, 기존 Expo Dev Launcher 빌드 스크립트 경고 1개). iPhone 18 Pro / iOS 27.0 시뮬레이터에서 지점 목록 → 강남점 상세 → `<` 버튼으로 지도 복귀, 지점 선택 강조·펼친 시트 유지와 상세의 하단 탭 노출을 확인했다.
+- Android prebuild 통과. 생성된 `MainActivity.kt`의 `super.onCreate(null)`과 manifest의 `android:enableOnBackInvokedCallback="false"`를 확인했다. 이 디렉토리는 기존처럼 Git 제외 대상이며 별도 네이티브 설정 수정은 필요하지 않았다.
+- **미검증:** 자동화 입력으로 iOS 가장자리 스와이프 완료·취소를 재현하지 못했다. 실제 아이폰 제스처, 지도 이동 후 상세 왕복의 카메라 유지, Android 네이티브 빌드·하드웨어 뒤로가기·Activity 재생성, VoiceOver/TalkBack은 별도 확인이 필요하다.
+- 읽기 전용 최종 리뷰에서 Important/Critical 및 Minor 결함을 발견하지 못했다. 리뷰는 실제 기기 검증을 대체하지 않는다.
+
+### 2026-10-02: 300개 이상 마커 렌더링 개선 검증
+
+- 모바일 타입 검사·전체 Node 테스트 62개, 실제 iOS C++ 캐시 검사 1개, iOS/Android JS 번들 생성, `git diff --check`: 통과.
+- 회귀 검사는 350개 밀집·1000개 분산 시 말풍선 상한, 화면 버퍼·초기 핀, 선택 우선·겹침 설정, 500개 이미지 순회·LRU 해제, 단일 비동기 생성·취소·실패, 이전 세션 정리, 초기 layout 순서와 SDK 좌표 변환 직렬화를 포함한다. Node 테스트의 네이티브 경계는 mock이며 실제 화면 성능 검사는 아니다.
+- Xcode 27.0 / iPhone 18 Pro / iOS 27.0 개발용 앱 빌드·설치 통과(오류 0, 경고 1). 기본 예시에서 말풍선 크기·선택 색상·상세 진입/복귀를 확인했다. 개발 플래그의 가상 분산 지점 350개로 지도 표시·겹침 숨김·확대된 화면의 갱신을 확인했다.
+- **미검증:** Android 네이티브 컴파일·기기 실행(로컬 SDK 없음), 350개 밀집 데이터의 네이티브 동작, 실기기 장시간 이동의 FPS·메모리, VoiceOver/TalkBack. 실제 지점 API는 연결하지 않았다.
+
+### 2026-10-02: 좌표 클러스터링과 선택 요약 검증 (후속 변경 전)
+
+- Naver SDK 2.9.0 + Supercluster 9.1.0 적용. 격자/48개 제한을 실제 bbox/zoom Cluster·Point 조회로 대체하고 기존 PNG·가상 목록·Native Stack을 재사용했다. 지점 API는 추가하지 않았다.
+- `pnpm typecheck:mobile`, `pnpm typecheck:shared`, 모바일 전체 Node 테스트 73개, 실제 iOS C++ 캐시 검사 1개, iOS/Android JavaScript export, `git diff --check`: 통과.
+- 자동 검사는 거리와 district의 분리, Cluster/Point 혼합, point_count·확장 zoom·bbox, 인덱스 재사용, 필터 제외 선택 해제, 350개 동일 좌표/1,000개 분산, 개발 전용 플래그, 가변 폭·두 줄·가격 없음, 캐시 재사용·128개 포화·생성 실패·취소·이전 세션 정리, 초기/resize 좌표 요청 직렬화를 포함한다. Node의 React/네이티브 경계는 대체되며 실기기 성능 검사가 아니다.
+- Xcode 27.0 / iPhone 18 Pro / iOS 27.0 개발용 앱을 SDK 패치와 함께 재빌드·설치했다(오류 0, 기존 Expo Dev Launcher 스크립트 경고 1개). 기본 마커의 폭·선택 색상·목록 선택 카메라/중간 요약을 확인했다. 가상 분산 350개에서 개수 클러스터 클릭 → 가격 마커 분리, 긴 이름 두 줄과 선택 요약, 상세보기 진입 → 지도·선택·중간 시트·축척 유지 복귀를 확인했다. 동일 좌표 350개에서 최대 확대 → 다시 클릭 → 구성 목록 350곳을 확인했다.
+- 최종 리뷰의 긴 cluster 줄 겹침, 긴 이름 ellipsis 측정, 초기 projection 겹침, SDK 이미지 완료 alpha 덮어쓰기/오래된 요청 문제를 보정했다. 후속 회귀 검사는 통과했다. SDK 패치는 재설치 후에도 적용되며 기존 앱을 네이티브 재빌드해야 한다.
+- **미검증:** Android 네이티브 컴파일·기기 실행(로컬 Android SDK 없음), 실기기 FPS/메모리·장시간 반복 이동, VoiceOver/TalkBack 전체 제스처. iOS 시뮬레이터와 JS export 결과로 이를 완료한 것으로 간주하지 않는다. 실제 운영 300개 지점은 API를 연결하지 않아 아직 표시하지 않는다.
+
+### 2026-10-02: 지점 선택 즉시 상세 이동
+
+- 후속 사용자 요청으로 중간 요약 시트와 `BranchSelection`을 제거했다. 가격 마커·목록 행은 선택 ID를 갱신하고 즉시 기존 Native Stack 상세로 이동한다. 시트 높이를 변경하지 않으며 상세 복귀 시 검색·필터·선택과 클러스터 구성 목록을 보존한다.
+- 모바일 Node 테스트 73개, `pnpm typecheck:mobile`, `git diff --check` 통과. 직접 이동·필터 제외·상세 복귀·구성 목록 유지 회귀 검사를 포함한다.
+- iPhone 18 Pro / iOS 27.0 시뮬레이터에서 최신 JS로 가격 마커와 목록 각각 한 번 선택 → 상세 진입, 뒤로가기 → 선택 색상과 접힌 목록 유지 확인. 이번 변경은 JS 흐름 수정이며 네이티브 재빌드는 다시 수행하지 않았다.
+- Android 네이티브 실행과 실기기 성능은 이번 수정에서도 미검증이다.
